@@ -1,17 +1,22 @@
 CC=gcc
 CFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2` -std=c11
-LFLAGS=`pkg-config --libs sdl2`
+LIBS=`pkg-config --libs sdl2`
 EXEC_FILE=quee
+OBJDIR=objs
 
-OBJECTS=main.o
+OBJECTS= $(addprefix $(OBJDIR)/, main.o)
 
-all: $(EXEC_FILE)
+all: make_obj_dir $(EXEC_FILE)
 
-$(EXEC_FILE): main.o 
-	$(CC) $^ $(LFLAGS) -o $@
+make_obj_dir:
+	mkdir -p $(OBJDIR)
 
-$(OBJECTS): %.o: %.c
+$(EXEC_FILE): $(OBJECTS) 
+	$(CC) $^ $(LIBS) -o $@
+
+$(OBJDIR) objs/%.o: %.c
 	$(CC) $< $(CFLAGS) -o $@
 
+.PHONY: clean
 clean:
-	rm -f *.o $(EXEC_FILE)
+	rm -f $(OBJECTS) $(EXEC_FILE)
