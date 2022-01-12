@@ -4,7 +4,7 @@ LIBS=`pkg-config --libs sdl2`
 EXEC_FILE=quee
 OBJDIR=objs
 
-OBJECTS= $(addprefix $(OBJDIR)/, main.o)
+OBJECTS= $(addprefix $(OBJDIR)/, main.o quee_helpers.o)
 
 all: make_obj_dir $(EXEC_FILE)
 
