@@ -1,10 +1,10 @@
 CC=gcc
-CFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2` -std=c11
-LIBS=`pkg-config --libs sdl2`
+CFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 sdl2_image` -std=c11
+LIBS=`pkg-config --libs sdl2 sdl2_image`
 EXEC_FILE=quee
 OBJDIR=objs
 
-OBJECTS= $(addprefix $(OBJDIR)/, quee.o quee_helpers.o)
+OBJECTS= $(addprefix $(OBJDIR)/, main.o quee_helpers.o quee_sprite.o)
 
 all: make_obj_dir $(EXEC_FILE)
 
