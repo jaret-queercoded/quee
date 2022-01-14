@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 sdl2_image` -std=c11
-LIBS=`pkg-config --libs sdl2 sdl2_image`
+CFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image` -std=c11
+LIBS=`pkg-config --libs sdl2 SDL2_image`
 EXEC_FILE=quee
 OBJDIR=objs
 
@@ -14,7 +14,9 @@ make_obj_dir:
 $(EXEC_FILE): $(OBJECTS) 
 	$(CC) $^ $(LIBS) -o $@
 
-$(OBJDIR) objs/%.o: %.c
+$(OBJDIR) : %.c
+	$(CC) $< $(CFLAGS) -o $@
+objs/%.o: %.c
 	$(CC) $< $(CFLAGS) -o $@
 
 .PHONY: clean
