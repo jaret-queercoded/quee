@@ -3,3 +3,4 @@ quee
 .cache/
 compile_commands.json
 objs/
+.clangd/
