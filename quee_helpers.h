@@ -5,6 +5,9 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
+#define TARGET_FPS 60
+#define TICKS_PER_FRAME 1000.0f / TARGET_FPS
+
 typedef struct Pixel Pixel;
 
 struct Pixel {

@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image` -std=c11
-LIBS=`pkg-config --libs sdl2 SDL2_image`
+CFLAGS=-g -Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image` -std=c11
+LIBS=`pkg-config --libs sdl2 SDL2_image` -lm
 EXEC_FILE=quee
 OBJDIR=objs
 
