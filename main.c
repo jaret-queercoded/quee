@@ -1,4 +1,6 @@
 #include <SDL.h>
+#undef main
+
 #include <SDL_render.h>
 #include <SDL_timer.h>
 
