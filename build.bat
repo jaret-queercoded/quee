@@ -29,13 +29,16 @@ if not exist external\json-c-0.15 (
 		cd json-c-build
 		cmake ../json-c-0.15
 		msbuild "json-c.vcxproj" /m /verbosity:normal /p:OutDir=lib\
-		cd ..\..
+		cd ..
 	)
 	cd ..
 )
+echo %CD%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
-copy SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\*.dll .
-copy SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\*.dll .
-copy json-c-build\lib\json-c.dll .
-cl main.c quee_helpers.c quee_sprite.c quee_scene.c SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\SDL2.lib SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\SDL2_image.lib json-c-build/Debug/json-c.lib /I SDL2-devel-2.0.20-VC\SDL2-2.0.20\include /I SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include /I json-c-0.15/ /I json-c-build/
+copy external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\*.dll .
+copy external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\*.dll .
+copy external\json-c-build\lib\json-c.dll .
+cl /Fequee.exe main.c quee_helpers.c quee_sprite.c quee_scene.c^
+	external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\SDL2.lib external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\SDL2_image.lib external\json-c-build/Debug/json-c.lib^
+	/I external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\include /I external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include /I external\json-c-0.15/ /I external\json-c-build/

@@ -4,3 +4,7 @@ quee
 compile_commands.json
 objs/
 .clangd/
+*.dll
+external/
+*.exe
+*.obj
