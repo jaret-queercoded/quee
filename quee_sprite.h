@@ -9,6 +9,6 @@ struct quee_sprite {
     SDL_Texture *texture;
 };
 
-quee_sprite *create_sprite_from_image(SDL_Renderer *renderer, const char *file);
+quee_sprite *create_quee_sprite_from_image_path(SDL_Renderer *renderer, const char *file);
 
 void destroy_quee_sprite(quee_sprite *sprite);

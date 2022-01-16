@@ -6,7 +6,7 @@
 #include <SDL_image.h>
 
 
-quee_sprite *create_sprite_from_image(SDL_Renderer *renderer, const char *file) {
+quee_sprite *create_quee_sprite_from_image_path(SDL_Renderer *renderer, const char *file) {
 
     // Get the texture from the file by putting it in a surface
     // and then creating the texture from the surface
