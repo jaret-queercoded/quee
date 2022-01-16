@@ -1,23 +1,23 @@
 CC=gcc
-CFLAGS=-g -Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image json-c` -std=c11
+CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image json-c` -std=c11
 LIBS=`pkg-config --libs sdl2 SDL2_image json-c` -lm
 EXEC_FILE=quee
 OBJDIR=objs
 
 OBJECTS= $(addprefix $(OBJDIR)/, main.o quee_helpers.o quee_sprite.o quee_scene.o)
 
-all: make_obj_dir $(EXEC_FILE)
+all: $(EXEC_FILE)
 
-make_obj_dir:
-	mkdir -p $(OBJDIR)
+debug: CCFLAGS += -DDEBUG -g
+debug: $(EXEC_FILE)
 
 $(EXEC_FILE): $(OBJECTS) 
 	$(CC) $^ $(LIBS) -o $@
 
-$(OBJDIR) : %.c
-	$(CC) $< $(CFLAGS) -o $@
-objs/%.o: %.c
-	$(CC) $< $(CFLAGS) -o $@
+$(OBJDIR)/%.o: %.c $(OBJDIR)
+	$(CC) $< $(CCFLAGS) -o $@
+$(OBJDIR):
+	mkdir $@
 
 .PHONY: clean
 clean:
