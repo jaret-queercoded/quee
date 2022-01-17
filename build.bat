@@ -39,6 +39,6 @@ call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary
 copy external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\*.dll .
 copy external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\*.dll .
 copy external\json-c-build\lib\json-c.dll .
-cl /Fequee.exe main.c quee_helpers.c quee_sprite.c quee_scene.c^
+cl /Fequee.exe main.c quee_helpers.c quee_sprite.c quee_scene.c quee_renderer.c^
 	external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\SDL2.lib external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\SDL2_image.lib external\json-c-build/Debug/json-c.lib^
 	/I external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\include /I external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include /I external\json-c-0.15/ /I external\json-c-build/
