@@ -42,18 +42,19 @@ int quee_scene_manager_remove_index(quee_scene_manager *manager, uint32_t index)
         quee_set_error("Scene manager tried to remove a scene outside of it current capcity");
         return -1;
     }
-    destroy_quee_scene(manager->scenes[manager->current_capacity--]);
+    destroy_quee_scene(&manager->scenes[manager->current_capacity--]);
     return 0;
 }
 quee_scene* quee_scene_manager_current_capacity(quee_scene_manager *manager) {
     return manager->scenes[manager->current_capacity];
 }
-void destroy_quee_scene_manager(quee_scene_manager *manager) {
-    for(int i = 0; i < manager->current_capacity; i++) {
-        destroy_quee_scene(manager->scenes[i]);
+void destroy_quee_scene_manager(quee_scene_manager **manager) {
+    for(int i = 0; i < (*manager)->current_capacity; i++) {
+        destroy_quee_scene(&(*manager)->scenes[i]);
     }
-    free(manager->scenes);
-    free(manager);
+    free((*manager)->scenes);
+    free(*manager);
+    *manager = NULL;
 }
 
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer) {
@@ -87,10 +88,11 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer) {
     return scene;
 }
 
-void destroy_quee_scene(quee_scene *scene) {
-    for(int i = 0; i < scene->n_sprites; i++) {
-        destroy_quee_sprite(scene->sprites[i]);
+void destroy_quee_scene(quee_scene **scene) {
+    for(int i = 0; i < (*scene)->n_sprites; i++) {
+        destroy_quee_sprite((*scene)->sprites[i]);
     }
 
-    free(scene);
+    free(*scene);
+    *scene = NULL;
 }

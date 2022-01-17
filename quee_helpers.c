@@ -28,7 +28,7 @@ void* check_sdl_ptr(void *ptr) {
     return ptr;
 }
 
-static char* quee_error_message;
+static char quee_error_message[1024];
 
 char* quee_get_error() {
     return quee_error_message;

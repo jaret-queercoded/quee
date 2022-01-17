@@ -30,4 +30,5 @@ void destroy_quee_sprite(quee_sprite *sprite) {
     SDL_DestroyTexture(sprite->texture);
 
     free(sprite);
+    sprite = NULL;
 }
