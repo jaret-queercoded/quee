@@ -10,6 +10,7 @@
 
 typedef struct Pixel Pixel;
 
+
 struct Pixel {
     uint8_t B;
     uint8_t G;
@@ -20,3 +21,6 @@ struct Pixel {
 
 void check_sdl_code(int code);
 void* check_sdl_ptr(void *ptr);
+
+void check_quee_code(int code);
+void quee_set_error(char* msg);

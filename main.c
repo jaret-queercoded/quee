@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include "quee_helpers.h"
+#include "quee_renderer.h"
 #include "quee_scene.h"
 #include "quee_sprite.h"
 
@@ -22,7 +23,8 @@ int main(void) {
     SDL_Renderer *renderer = check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
-    quee_scene* scene = load_quee_scene("scene.json", renderer); 
+    quee_scene_manager *manager = create_quee_scene_manager(10);
+    check_quee_code(quee_scene_manager_insert(manager, load_quee_scene("scene.json", renderer))); 
     bool quit = false;
 
     uint32_t frame_start, frame_end;
@@ -36,9 +38,12 @@ int main(void) {
                 quit = true;
                 break;
         }
+        
+        // Render all scenes 
+        // The scenes will also tell if they want to be rendered
         SDL_RenderClear(renderer);
-        for(int i = 0; i < scene->n_sprites; i++) {
-            SDL_RenderCopy(renderer, scene->sprites[i]->texture, NULL, NULL);
+        for(int i = 0; i < manager->current_capacity; i++) {
+            check_quee_code(quee_render_scene(renderer, manager->scenes[i]));
         }
         SDL_RenderPresent(renderer);
         frame_end = SDL_GetTicks();
@@ -50,7 +55,7 @@ int main(void) {
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
     }
 
-    destroy_quee_scene(scene); 
+    destroy_quee_scene_manager(manager);
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

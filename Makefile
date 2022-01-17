@@ -4,7 +4,7 @@ LIBS=`pkg-config --libs sdl2 SDL2_image json-c` -lm
 EXEC_FILE=quee
 OBJDIR=objs
 
-OBJECTS= $(addprefix $(OBJDIR)/, main.o quee_helpers.o quee_sprite.o quee_scene.o)
+OBJECTS= $(addprefix $(OBJDIR)/, main.o quee_helpers.o quee_sprite.o quee_scene.o quee_renderer.o)
 
 all: $(EXEC_FILE)
 
@@ -14,10 +14,10 @@ debug: $(EXEC_FILE)
 $(EXEC_FILE): $(OBJECTS) 
 	$(CC) $^ $(LIBS) -o $@
 
-$(OBJDIR)/%.o: %.c $(OBJDIR)
+$(OBJDIR)/%.o: %.c #$(OBJDIR)
 	$(CC) $< $(CCFLAGS) -o $@
-$(OBJDIR):
-	mkdir $@
+#$(OBJDIR):
+#	mkdir $@
 
 .PHONY: clean
 clean:

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL_error.h>
+#include <string.h>
 
 // Checks the sdl return code to see if something went wrong
 // 
@@ -25,4 +26,16 @@ void* check_sdl_ptr(void *ptr) {
         exit(EXIT_FAILURE);
     }
     return ptr;
+}
+
+static char* quee_error_message;
+
+void check_quee_code(int code) {
+    if(code < 0) {
+        fprintf(stderr, "Quee encountered an error: %s", quee_error_message);
+    }
+}
+
+void quee_set_error(char* msg) {
+    strcpy(quee_error_message, msg);
 }
