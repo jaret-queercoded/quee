@@ -30,9 +30,14 @@ void* check_sdl_ptr(void *ptr) {
 
 static char* quee_error_message;
 
+char* quee_get_error() {
+    return quee_error_message;
+}
+
 void check_quee_code(int code) {
     if(code < 0) {
-        fprintf(stderr, "Quee encountered an error: %s", quee_error_message);
+        fprintf(stderr, "Quee encountered an error: %s", quee_get_error());
+        exit(EXIT_FAILURE);
     }
 }
 
