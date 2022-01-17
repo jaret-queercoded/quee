@@ -10,3 +10,7 @@ void test_scene_manager_creation() {
     assert(manager->current_capacity == 0);
     assert(manager->max_capacity == max_cap);
 }
+
+void failure() {
+    assert(false);
+}

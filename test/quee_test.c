@@ -2,9 +2,9 @@
 
 #include "quee_scene_test.h"
 
-#define NUMBER_OF_TESTS 1
+#define NUMBER_OF_TESTS 2
 
-void (*tests[NUMBER_OF_TESTS]) () = {test_scene_manager_creation};
+void (*tests[NUMBER_OF_TESTS]) () = {test_scene_manager_creation, failure};
 
 int main(int argc, char** argv) {
     (void) argc;
