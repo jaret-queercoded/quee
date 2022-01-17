@@ -25,8 +25,8 @@ struct quee_scene {
 quee_scene_manager* create_quee_scene_manager(uint64_t capacity);
 int quee_scene_manager_insert(quee_scene_manager *manager, quee_scene *scene);
 int quee_scene_manager_remove_index(quee_scene_manager *manager, uint32_t index);
-void destroy_quee_scene_manager(quee_scene_manager *manager);
+void destroy_quee_scene_manager(quee_scene_manager **manager);
 
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer *renderer);
 
-void destroy_quee_scene(quee_scene *scene);
+void destroy_quee_scene(quee_scene **scene);

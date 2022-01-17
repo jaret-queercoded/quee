@@ -55,7 +55,7 @@ int main(void) {
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
     }
 
-    destroy_quee_scene_manager(manager);
+    destroy_quee_scene_manager(&manager);
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
