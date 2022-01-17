@@ -24,7 +24,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Unit Tests
+      - name: install_dependencies
+        run: |
+          sduo apt-get update -y -qq
+          sudo apt-get install libsdl2-dev libsdl2-image-dev libjson-c-dev
+      - name: build
+        run: make
+      - name: test
         run: make test && ./quee_test
