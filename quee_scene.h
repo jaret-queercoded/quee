@@ -1,4 +1,5 @@
-#pragma once
+#ifndef QUEE_SCENE_H_
+#define QUEE_SCENE_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -30,3 +31,5 @@ void destroy_quee_scene_manager(quee_scene_manager **manager);
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer *renderer);
 
 void destroy_quee_scene(quee_scene **scene);
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef QUEE_SPRITE_H_
+#define QUEE_SPRITE_H_
 
 typedef struct SDL_Texture SDL_Texture;
 typedef struct SDL_Renderer SDL_Renderer;
@@ -12,3 +13,5 @@ struct quee_sprite {
 quee_sprite *create_quee_sprite_from_image_path(SDL_Renderer *renderer, const char *file);
 
 void destroy_quee_sprite(quee_sprite *sprite);
+
+#endif
