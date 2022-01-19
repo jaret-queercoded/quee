@@ -1,4 +1,5 @@
-#pragma once
+#ifndef QUEE_SCENE_H_
+#define QUEE_SCENE_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -24,9 +25,12 @@ struct quee_scene {
 
 quee_scene_manager* create_quee_scene_manager(uint64_t capacity);
 int quee_scene_manager_insert(quee_scene_manager *manager, quee_scene *scene);
-int quee_scene_manager_remove_index(quee_scene_manager *manager, uint32_t index);
+int quee_scene_manager_remove(quee_scene_manager *manager, char *scene_name);
 void destroy_quee_scene_manager(quee_scene_manager **manager);
 
+quee_scene* create_quee_scene();
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer *renderer);
 
 void destroy_quee_scene(quee_scene **scene);
+
+#endif

@@ -9,3 +9,4 @@ objs/
 external/
 *.exe
 *.obj
+.vscode/

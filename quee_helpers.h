@@ -1,4 +1,5 @@
-#pragma once
+#ifndef QUEE_HELPERS_H_
+#define QUEE_HELPERS_H_
 
 #include <stdint.h>
 
@@ -25,3 +26,5 @@ void* check_sdl_ptr(void *ptr);
 void check_quee_code(int code);
 void quee_set_error(char* msg);
 char* quee_get_error();
+
+#endif
