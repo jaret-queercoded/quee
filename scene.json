@@ -1,5 +1,0 @@
-{
-    "name" : "test_scene1",
-    "render" : true,
-    "sprites": ["test.png"]
-}
