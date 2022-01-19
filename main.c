@@ -24,7 +24,7 @@ int main(void) {
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
 
     quee_scene_manager *manager = create_quee_scene_manager(10);
-    check_quee_code(quee_scene_manager_insert(manager, load_quee_scene("scene.json", renderer))); 
+    check_quee_code(quee_scene_manager_insert(manager, load_quee_scene("assets/scene.json", renderer))); 
     bool quit = false;
 
     uint32_t frame_start, frame_end;
@@ -32,11 +32,12 @@ int main(void) {
     while(!quit) {
         frame_start = SDL_GetTicks();
         SDL_Event event;
-        SDL_PollEvent(&event);
-        switch (event.type) {
-            case SDL_QUIT:
-                quit = true;
-                break;
+        while(SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+            }
         }
         
         // Render all scenes 
