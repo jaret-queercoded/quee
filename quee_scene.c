@@ -37,17 +37,30 @@ int quee_scene_manager_insert(quee_scene_manager *manager, quee_scene *scene) {
     return 0;
 }
 
-int quee_scene_manager_remove_index(quee_scene_manager *manager, uint32_t index) {
-    if(manager->current_capacity > index) {
-        quee_set_error("Scene manager tried to remove a scene outside of it current capcity");
+int quee_scene_manager_remove(quee_scene_manager *manager, char *scene_name) {
+    int index = 0;
+    for(; index < manager->current_capacity; index++) {
+        const char *name = manager->scenes[index]->name;
+        if(strcmp(scene_name, name) == 0) {
+            destroy_quee_scene(&manager->scenes[index]);  
+            break;
+        }
+    }
+    if(index == manager->current_capacity) {
+        quee_set_error("Couldn't find a scene by that name!");
         return -1;
     }
-    destroy_quee_scene(&manager->scenes[manager->current_capacity--]);
+    for(; index < manager->current_capacity - 1; index++) {
+        quee_scene *s1, *s2;
+        s1 = manager->scenes[index];
+        s2 = manager->scenes[index + 1];
+        manager->scenes[index] = s2;
+        manager->scenes[index + 1] = s1;
+    }
+    manager->current_capacity--;
     return 0;
 }
-quee_scene* quee_scene_manager_current_capacity(quee_scene_manager *manager) {
-    return manager->scenes[manager->current_capacity];
-}
+
 void destroy_quee_scene_manager(quee_scene_manager **manager) {
     for(int i = 0; i < (*manager)->current_capacity; i++) {
         destroy_quee_scene(&(*manager)->scenes[i]);
@@ -55,6 +68,15 @@ void destroy_quee_scene_manager(quee_scene_manager **manager) {
     free((*manager)->scenes);
     free(*manager);
     *manager = NULL;
+}
+
+quee_scene* create_quee_scene() {
+    quee_scene* scene = malloc(sizeof(quee_scene));
+    scene->n_sprites = 0;
+    scene->name = "";
+    scene->render = NULL;
+    scene->sprites = NULL;
+    return scene;
 }
 
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer) {
@@ -67,6 +89,10 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer) {
     json_object *render;
     quee_scene* scene = malloc(sizeof(quee_scene));
     fp = fopen(scene_path, "r");
+    if(fp == NULL) {
+        quee_set_error("Coulnd't open file");
+        return NULL;
+    }
     fread(buffer, 1024, 1, fp);
     fclose(fp);
 
