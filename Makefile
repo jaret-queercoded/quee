@@ -1,4 +1,4 @@
-CC=gcc
+CC=clang
 CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image json-c` -std=c11
 LIBS=`pkg-config --libs sdl2 SDL2_image json-c` -lm
 EXEC_FILE=quee
