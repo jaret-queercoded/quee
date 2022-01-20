@@ -2,6 +2,7 @@
 #include "quee_test_helper.h"
 
 #include "../quee_scene.h"
+#include "../quee_texture.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -33,7 +34,7 @@ void test_quee_scene_manager_add_scene() {
         int len = snprintf(NULL, 0, "%d", i);
         char *name = malloc(len + 1);
         snprintf(name, len + 1, "%d", i);
-        scene->name = name;
+        strcpy(scene->name, name);
         assert(quee_scene_manager_insert(manager, scene) == 0);
     }
 
@@ -45,7 +46,7 @@ void test_quee_scene_manager_add_scene() {
     // Attempt to add a scene that already has this name
     // It should fail
     quee_scene* scene = create_quee_scene();
-    scene->name = "0";
+    strcpy(scene->name , "0");
     assert(quee_scene_manager_insert(manager, scene) == -1);
     destroy_quee_scene_manager(&manager);
     assert(manager == NULL);
@@ -58,8 +59,8 @@ void test_quee_scene_manager_remove_scene() {
     quee_scene_manager* manager = create_quee_scene_manager(max_cap);
     quee_scene *s1 = create_quee_scene();
     quee_scene *s2 = create_quee_scene();
-    s1->name = "s1";
-    s2->name = "s2";
+    strcpy(s1->name, "s1");
+    strcpy(s2->name, "s2");
     assert(quee_scene_manager_insert(manager, s1) == 0);
     assert(quee_scene_manager_insert(manager, s2) == 0);
     assert(quee_scene_manager_remove(manager, "s3") == -1);
@@ -88,7 +89,8 @@ void test_quee_scene_creation() {
 
 void test_quee_load_scene() {
     TOP_OF_TEST
-    quee_scene *scene = load_quee_scene("test/testscene.json", NULL);
+    quee_texture_manager *texture_manager = create_quee_texture_manager(10);
+    quee_scene *scene = load_quee_scene("test/testscene.json", NULL, texture_manager);
     assert(scene != NULL);
     assert(strcmp(scene->name, "test_scene1") == 0);
     assert(scene->render);

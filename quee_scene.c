@@ -2,7 +2,6 @@
 #include "quee_helpers.h"
 #include "quee_sprite.h"
 #include "quee_texture.h"
-#include "quee_managers.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +9,6 @@
 
 #include <json_object.h>
 #include <json_tokener.h>
-
-extern quee_managers *g_managers;
 
 quee_scene_manager* create_quee_scene_manager(uint64_t max_capacity) {
     quee_scene_manager *manager = malloc(sizeof(quee_scene_manager));
@@ -100,7 +97,7 @@ quee_scene* create_quee_scene() {
     return scene;
 }
 
-quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer) {
+quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager) {
     FILE *fp;
     char buffer[1024];
     json_object *parsed_json;
@@ -132,7 +129,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer) {
     for(size_t i = 0; i < scene->current_sprites; i++) {
         sprite_path = json_object_array_get_idx(sprites, i);
         quee_texture *texture = 
-            get_quee_texture_from_texture_manager(g_managers->texture_manager, json_object_get_string(sprite_path));
+            get_quee_texture_from_texture_manager(texture_manager, json_object_get_string(sprite_path));
         scene->sprites[i] = create_quee_sprite(texture); 
     }
     return scene;

@@ -12,10 +12,8 @@
 #include "quee_scene.h"
 #include "quee_sprite.h"
 #include "quee_texture.h"
-#include "quee_managers.h"
 
 SDL_Renderer* g_renderer;
-quee_managers* g_managers;
 
 int main(void) {
     check_sdl_code(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER));
@@ -28,9 +26,11 @@ int main(void) {
         check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
     SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 255);
 
-    g_managers = create_quee_managers();
+    quee_texture_manager *texture_manager = create_quee_texture_manager(10);
+    quee_scene_manager *scene_manager = create_quee_scene_manager(10);
+
     check_quee_code(quee_scene_manager_insert(
-        g_managers->scene_manager, load_quee_scene("assets/scene.json", g_renderer)));
+        scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
     bool quit = false;
 
     uint32_t frame_start, frame_end;
@@ -49,9 +49,9 @@ int main(void) {
         // Render all scenes 
         // The scenes will also tell if they want to be rendered
         SDL_RenderClear(g_renderer);
-        for (int i = 0; i < g_managers->scene_manager->current_capacity; i++) {
+        for (int i = 0; i < scene_manager->current_capacity; i++) {
           check_quee_code(
-              quee_render_scene(g_renderer, g_managers->scene_manager->scenes[i]));
+              quee_render_scene(g_renderer, scene_manager->scenes[i]));
         }
         SDL_RenderPresent(g_renderer);
         frame_end = SDL_GetTicks();
@@ -63,8 +63,8 @@ int main(void) {
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
     }
 
-    destroy_quee_managers(&g_managers);
-
+    destroy_quee_scene_manager(&scene_manager);
+    destroy_quee_texture_manager(&texture_manager);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(g_renderer);
 
