@@ -20,6 +20,10 @@ quee_test tests[NUMBER_OF_TESTS] = {
     {.func_ptr = test_quee_load_scene, .suite = "quee_scene"},
 };
 
+//We use a global render pointer in c so I just make a null one here for tests
+typedef struct SDL_Renderer SDL_Renderer;
+SDL_Renderer *g_renderer = NULL;
+
 int main(int argc, char** argv) {
     if(argc == 1) {
         for(int i = 0; i < NUMBER_OF_TESTS; i++) {

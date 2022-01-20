@@ -12,8 +12,8 @@ int quee_render_scene(SDL_Renderer* renderer, quee_scene *scene) {
         return -1;
     }
     if(!scene->render) return 0;
-    for(int i = 0; i < scene->n_sprites; i++) {
-        SDL_RenderCopy(renderer, scene->sprites[i]->texture, NULL, NULL);
+    for(int i = 0; i < scene->current_sprites; i++) {
+        SDL_RenderCopy(renderer, scene->sprites[i]->texture->texture, NULL, NULL);
     }
     return 0;
 }

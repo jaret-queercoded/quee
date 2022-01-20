@@ -1,3 +1,5 @@
+#include "quee_helpers.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL_error.h>
@@ -36,11 +38,23 @@ char* quee_get_error() {
 
 void check_quee_code(int code) {
     if(code < 0) {
-        fprintf(stderr, "Quee encountered an error: %s", quee_get_error());
+        fprintf(stderr, "Quee encountered an error: %s\n", quee_get_error());
         exit(EXIT_FAILURE);
     }
 }
 
 void quee_set_error(char* msg) {
     strcpy(quee_error_message, msg);
+}
+
+//djb2 hash function
+unsigned long hash(unsigned char *str)
+{
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
 }

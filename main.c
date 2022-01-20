@@ -11,7 +11,9 @@
 #include "quee_renderer.h"
 #include "quee_scene.h"
 #include "quee_sprite.h"
+#include "quee_texture.h"
 
+SDL_Renderer* g_renderer;
 
 int main(void) {
     check_sdl_code(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER));
@@ -20,11 +22,15 @@ int main(void) {
         SDL_CreateWindow("quee", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 0)
     );
 
-    SDL_Renderer *renderer = check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    g_renderer =
+        check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
+    SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 255);
 
-    quee_scene_manager *manager = create_quee_scene_manager(10);
-    check_quee_code(quee_scene_manager_insert(manager, load_quee_scene("assets/scene.json", renderer))); 
+    quee_texture_manager *texture_manager = create_quee_texture_manager(10);
+    quee_scene_manager *scene_manager = create_quee_scene_manager(10);
+
+    check_quee_code(quee_scene_manager_insert(
+        scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
     bool quit = false;
 
     uint32_t frame_start, frame_end;
@@ -42,11 +48,12 @@ int main(void) {
         
         // Render all scenes 
         // The scenes will also tell if they want to be rendered
-        SDL_RenderClear(renderer);
-        for(int i = 0; i < manager->current_capacity; i++) {
-            check_quee_code(quee_render_scene(renderer, manager->scenes[i]));
+        SDL_RenderClear(g_renderer);
+        for (int i = 0; i < scene_manager->current_capacity; i++) {
+          check_quee_code(
+              quee_render_scene(g_renderer, scene_manager->scenes[i]));
         }
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(g_renderer);
         frame_end = SDL_GetTicks();
 
         ms_elapsed = (frame_end - frame_start) / 1000.0f;
@@ -56,10 +63,10 @@ int main(void) {
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
     }
 
-    destroy_quee_scene_manager(&manager);
-
+    destroy_quee_scene_manager(&scene_manager);
+    destroy_quee_texture_manager(&texture_manager);
     SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(g_renderer);
 
     SDL_Quit();
 
