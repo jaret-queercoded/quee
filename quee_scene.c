@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <string.h>
 
 #include <json_object.h>
@@ -14,24 +13,41 @@ quee_scene_manager* create_quee_scene_manager(uint64_t max_capacity) {
     quee_scene_manager *manager = malloc(sizeof(quee_scene_manager));
     manager->max_capacity = max_capacity;
     manager->scenes = malloc(sizeof(quee_scene *) * manager->max_capacity);
+    for(int i = 0; i < manager->max_capacity; i++) {
+        manager->scenes[i] = NULL;
+    }
     manager->current_capacity = 0;
     return manager;
 }
 
 int quee_scene_manager_insert(quee_scene_manager *manager, quee_scene *scene) {
-    if(manager->current_capacity == manager->max_capacity) {
-        quee_set_error("Scene manager is already at max capcity"); 
-        return -1;
-    }
     if(scene == NULL) {
         quee_set_error("Scene manager was given a null scene");
         return -1;
     }
+    // Check to make sure that there isn't a name colision
     for(int i = 0; i < manager->current_capacity; i++) {
         if(strcmp(manager->scenes[i]->name, scene->name) == 0) {
             quee_set_error("Scene already exists with that name");
             return -1;
         }
+    }
+    // If we are at max capcity lets resize kinda like a vector in c++
+    if(manager->current_capacity == manager->max_capacity) {
+        manager->max_capacity *= 2;
+        quee_scene **new_scenes = malloc(sizeof(quee_scene *) * manager->max_capacity); 
+        int i = 0;
+        // Copy the pointers from the old
+        for(; i < manager->current_capacity; i++) {
+            new_scenes[i] = manager->scenes[i];
+        }
+        // NULL out the rest
+        for(; i < manager->max_capacity; i++) {
+            new_scenes[i] = NULL;
+        }
+        // Free the old scenes pointer so we don't leak
+        free(manager->scenes);
+        manager->scenes = new_scenes;
     }
     manager->scenes[manager->current_capacity++] = scene;
     return 0;
