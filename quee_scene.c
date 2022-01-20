@@ -11,6 +11,8 @@
 #include <json_object.h>
 #include <json_tokener.h>
 
+extern quee_managers *g_managers;
+
 quee_scene_manager* create_quee_scene_manager(uint64_t max_capacity) {
     quee_scene_manager *manager = malloc(sizeof(quee_scene_manager));
     manager->max_capacity = max_capacity;

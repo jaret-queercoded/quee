@@ -7,6 +7,8 @@
 #include <SDL_render.h>
 #include <SDL_image.h>
 
+extern SDL_Renderer *g_renderer;
+
 quee_texture* create_quee_texture_from_image(const char *file) {
     quee_texture* texture = malloc(sizeof(quee_texture));
 

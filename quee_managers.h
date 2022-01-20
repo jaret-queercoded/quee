@@ -12,8 +12,6 @@ struct quee_managers {
     quee_scene_manager* scene_manager;
 };
 
-quee_managers* g_managers;
-
 quee_managers* create_quee_managers();
 void destroy_quee_managers(quee_managers **managers);
 

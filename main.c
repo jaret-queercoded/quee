@@ -14,6 +14,9 @@
 #include "quee_texture.h"
 #include "quee_managers.h"
 
+SDL_Renderer* g_renderer;
+quee_managers* g_managers;
+
 int main(void) {
     check_sdl_code(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER));
 
