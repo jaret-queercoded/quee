@@ -72,3 +72,27 @@ void test_quee_scene_manager_remove_scene() {
     assert(manager == NULL);
     BOTTOM_OF_TEST
 }
+
+void test_quee_scene_creation() {
+    TOP_OF_TEST
+    quee_scene *scene = create_quee_scene();
+    assert(scene != NULL);
+    assert(strcmp(scene->name, "") == 0);
+    assert(scene->sprites == NULL);
+    assert(scene->n_sprites == 0);
+    destroy_quee_scene(&scene);
+    assert(scene == NULL);
+    BOTTOM_OF_TEST
+}
+
+void test_quee_load_scene() {
+    TOP_OF_TEST
+    quee_scene *scene = load_quee_scene("test/testscene.json", NULL);
+    assert(scene != NULL);
+    assert(strcmp(scene->name, "test_scene1") == 0);
+    assert(scene->render);
+    destroy_quee_scene(&scene);
+    assert(scene == NULL);
+    BOTTOM_OF_TEST
+}
+
