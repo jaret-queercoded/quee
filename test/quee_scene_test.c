@@ -79,7 +79,8 @@ void test_quee_scene_creation() {
     assert(scene != NULL);
     assert(strcmp(scene->name, "") == 0);
     assert(scene->sprites == NULL);
-    assert(scene->n_sprites == 0);
+    assert(scene->max_sprites == 0);
+    assert(scene->current_sprites == 0);
     destroy_quee_scene(&scene);
     assert(scene == NULL);
     BOTTOM_OF_TEST
