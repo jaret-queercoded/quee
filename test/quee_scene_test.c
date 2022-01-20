@@ -28,7 +28,7 @@ void test_quee_scene_manager_add_scene() {
     
     // Add 4 scenes 1 below cap
     quee_scene_manager* manager = create_quee_scene_manager(max_cap);
-    for(int i = 0; i < max_cap-1; i++) {
+    for(int i = 0; i < max_cap * 2; i++) {
         quee_scene* scene = create_quee_scene();
         int len = snprintf(NULL, 0, "%d", i);
         char *name = malloc(len + 1);
@@ -37,16 +37,15 @@ void test_quee_scene_manager_add_scene() {
         assert(quee_scene_manager_insert(manager, scene) == 0);
     }
 
+    assert(manager->max_capacity == 10);
+    assert(manager->current_capacity == 10);
+    assert(strcmp(manager->scenes[0]->name, "0") == 0);
+    assert(strcmp(manager->scenes[9]->name, "9") == 0);
+
     // Attempt to add a scene that already has this name
     // It should fail
     quee_scene* scene = create_quee_scene();
-    scene->name = "1";
-    assert(quee_scene_manager_insert(manager, scene) == -1);
-    assert(manager->current_capacity == 4);
-    // Change the name to 5 and then we can insert it
-    scene->name = "5";
-    assert(quee_scene_manager_insert(manager, scene) == 0);
-    // Now we are full so we can't insert another scene
+    scene->name = "0";
     assert(quee_scene_manager_insert(manager, scene) == -1);
     destroy_quee_scene_manager(&manager);
     assert(manager == NULL);
