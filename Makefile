@@ -18,7 +18,7 @@ test: CCFLAGS += -DDEBUG -g
 debug: CCFLAGS += -DDEBUG -g
 debug: $(EXEC_FILE)
 
-#$(EXEC_FILE): CCFLAGS += -O3
+$(EXEC_FILE): CCFLAGS += -O3
 $(EXEC_FILE): $(OBJECTS) $(MAIN_OBJECT) 
 	$(CC) $^ $(LIBS) -o $@
 

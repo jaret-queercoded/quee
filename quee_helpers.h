@@ -7,7 +7,7 @@
 #define WINDOW_HEIGHT 600
 
 #define TARGET_FPS 60
-#define TICKS_PER_FRAME 1000.0f / TARGET_FPS
+#define TICKS_PER_FRAME (1000.0f / TARGET_FPS)
 
 #define MAX_STR_LEN 256
 
@@ -24,7 +24,7 @@ void check_sdl_code(int code);
 void* check_sdl_ptr(void *ptr);
 
 void check_quee_code(int code);
-void check_quee_ptr(void *ptr);
+void* check_quee_ptr(void *ptr);
 void quee_set_error(char* msg);
 char* quee_get_error();
 

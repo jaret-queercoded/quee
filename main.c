@@ -31,7 +31,7 @@ int main(void) {
 
     check_quee_code(quee_scene_manager_insert(
         scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
-    quee_sprite *sprite = create_quee_sprite(get_quee_texture_from_texture_manager(texture_manager, "assets/sad.png"));
+    quee_sprite *sprite = check_quee_ptr(create_quee_sprite(get_quee_texture_from_texture_manager(texture_manager, "assets/sad.png")));
     quee_scene_add_sprite(scene_manager->scenes[0], sprite);
     bool quit = false;
 
@@ -60,7 +60,8 @@ int main(void) {
 
         ms_elapsed = (frame_end - frame_start) / 1000.0f;
 
-//        printf("FPS: %2f\n", 1000.0f / (TICKS_PER_FRAME - ms_elapsed));
+
+        printf("FPS: %2f Ticks: %f\n", 1000.0f / (TICKS_PER_FRAME - ms_elapsed), ms_elapsed);
 
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
     }
