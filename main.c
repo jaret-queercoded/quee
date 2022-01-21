@@ -26,11 +26,13 @@ int main(void) {
         check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
     SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 255);
 
-    quee_texture_manager *texture_manager = create_quee_texture_manager(10);
+    quee_texture_manager *texture_manager = create_quee_texture_manager(1);
     quee_scene_manager *scene_manager = create_quee_scene_manager(10);
 
     check_quee_code(quee_scene_manager_insert(
         scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
+    quee_sprite *sprite = create_quee_sprite(get_quee_texture_from_texture_manager(texture_manager, "assets/sad.png"));
+    quee_scene_add_sprite(scene_manager->scenes[0], sprite);
     bool quit = false;
 
     uint32_t frame_start, frame_end;

@@ -43,6 +43,14 @@ void check_quee_code(int code) {
     }
 }
 
+void check_quee_ptr(void *ptr) {
+    if(ptr == NULL) {
+        fprintf(stderr, "Quee returned a null ptr: %s\n", quee_get_error());
+        exit(EXIT_FAILURE);
+    }
+}
+
+
 void quee_set_error(char* msg) {
     strcpy(quee_error_message, msg);
 }
