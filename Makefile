@@ -8,7 +8,7 @@ OBJDIR=objs
 
 OBJECTS=$(addprefix $(OBJDIR)/, quee_helpers.o quee_sprite.o quee_scene.o quee_renderer.o quee_texture.o)
 MAIN_OBJECT=$(addprefix $(OBJDIR)/, main.o)
-TEST_OBJECTS=$(addprefix $(OBJDIR)/, quee_test.o quee_scene_test.o quee_texture_test.o)
+TEST_OBJECTS=$(addprefix $(OBJDIR)/, quee_test.o quee_test_helper.o quee_scene_test.o quee_texture_test.o)
 TEST_OBJECTS+=$(OBJECTS)
 
 all: $(EXEC_FILE)
