@@ -10,7 +10,7 @@
 // If something went wrong we print the error and exit
 void check_sdl_code(int code) {
     if(code < 0) {
-        fprintf(stderr, "SDL encountered an error: %s", SDL_GetError());
+        fprintf(stderr, "SDL encountered an error: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 }
@@ -24,7 +24,7 @@ void check_sdl_code(int code) {
 // Please don't give this a non sdl pointer because that would be mean :(
 void* check_sdl_ptr(void *ptr) {
     if(ptr == NULL) {
-        fprintf(stderr, "SDL gave you a null ptr: %s", SDL_GetError());
+        fprintf(stderr, "SDL gave you a null ptr: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
     return ptr;
