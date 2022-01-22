@@ -89,6 +89,9 @@ quee_test_result test_quee_load_scene() {
     QUEE_ASSERT(scene != NULL, "Couldn't get a scene");
     QUEE_ASSERT(strcmp(scene->name, "test_scene1") == 0, "Name wasn't what was expected");
     QUEE_ASSERT(scene->render, "We should want to render this scene");
+    QUEE_ASSERT(scene->current_sprites == 1, "We should have 1 sprite in this scene");
+    QUEE_ASSERT(scene->max_sprites == 1, "We should have a max of 1 sprite in this scene");
+    QUEE_ASSERT(scene->sprites[0], "We should have a sprite");
     destroy_quee_scene(&scene);
     QUEE_ASSERT(scene == NULL, "Scene was left dangling");
     return QUEE_PASSED;
