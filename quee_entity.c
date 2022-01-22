@@ -60,3 +60,9 @@ int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr) {
     entity->type |= type;
     return 0;
 }
+
+void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
+    if(entity->type & QUEE_SPRITE_BIT) {
+        update_quee_sprite(entity->sprite, delta_ticks);
+    }
+}
