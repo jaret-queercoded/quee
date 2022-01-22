@@ -85,7 +85,7 @@ quee_test_result test_quee_scene_creation() {
 
 quee_test_result test_quee_load_scene() {
     quee_texture_manager *texture_manager = create_quee_texture_manager(10);
-    quee_scene *scene = load_quee_scene("test/testscene.json", NULL, texture_manager);
+    quee_scene *scene = load_quee_scene("assets/test/testscene.json", NULL, texture_manager);
     QUEE_ASSERT(scene != NULL, "Couldn't get a scene");
     QUEE_ASSERT(strcmp(scene->name, "test_scene1") == 0, "Name wasn't what was expected");
     QUEE_ASSERT(scene->render, "We should want to render this scene");

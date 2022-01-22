@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <string.h>
 
-const char *fp = "assets/test.png";
+const char *fp = "assets/test/test.png";
 
 quee_test_result test_quee_texture_creation_and_deletion() {
     quee_texture *texture = create_quee_texture_from_image(fp);
