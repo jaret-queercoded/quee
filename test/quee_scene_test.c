@@ -75,9 +75,9 @@ quee_test_result test_quee_scene_creation() {
     quee_scene *scene = create_quee_scene();
     QUEE_ASSERT(scene != NULL, "Didn't get a scene");
     QUEE_ASSERT(strcmp(scene->name, "") == 0, "Name should have been empty");
-    QUEE_ASSERT(scene->sprites == NULL, "There should be no sprites");
-    QUEE_ASSERT(scene->max_sprites == 0, "The max sprites should be zero");
-    QUEE_ASSERT(scene->current_sprites == 0, "Current sprites should be zero");
+    QUEE_ASSERT(scene->entities == NULL, "There should be no entities");
+    QUEE_ASSERT(scene->max_entities == 0, "The max entities should be zero");
+    QUEE_ASSERT(scene->current_entities == 0, "Current entities should be zero");
     destroy_quee_scene(&scene);
     QUEE_ASSERT(scene == NULL, "Scene was left dangling");
     return QUEE_PASSED;
@@ -89,9 +89,9 @@ quee_test_result test_quee_load_scene() {
     QUEE_ASSERT(scene != NULL, "Couldn't get a scene");
     QUEE_ASSERT(strcmp(scene->name, "test_scene1") == 0, "Name wasn't what was expected");
     QUEE_ASSERT(scene->render, "We should want to render this scene");
-    QUEE_ASSERT(scene->current_sprites == 1, "We should have 1 sprite in this scene");
-    QUEE_ASSERT(scene->max_sprites == 1, "We should have a max of 1 sprite in this scene");
-    QUEE_ASSERT(scene->sprites[0], "We should have a sprite");
+    QUEE_ASSERT(scene->current_entities == 1, "We should have 1 sprite in this scene");
+    QUEE_ASSERT(scene->max_entities == 1, "We should have a max of 1 sprite in this scene");
+    QUEE_ASSERT(scene->entities[0], "We should have a sprite");
     destroy_quee_scene(&scene);
     QUEE_ASSERT(scene == NULL, "Scene was left dangling");
     return QUEE_PASSED;

@@ -59,7 +59,7 @@ int main(void) {
         ms_elapsed = (frame_end - frame_start) / 1000.0f;
 
 
-        printf("FPS: %2f Ticks: %f\n", 1000.0f / (TICKS_PER_FRAME - ms_elapsed), ms_elapsed);
+        /*printf("FPS: %2f Ticks: %f\n", 1000.0f / (TICKS_PER_FRAME - ms_elapsed), ms_elapsed);*/
 
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
     }

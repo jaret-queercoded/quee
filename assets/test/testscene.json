@@ -1,5 +1,5 @@
 {
     "name" : "test_scene1",
     "render" : true,
-    "sprites": ["assets/test/test.png"]
+    "entities": ["assets/test/test.png"]
 }
