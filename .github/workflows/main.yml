@@ -33,4 +33,5 @@ jobs:
       - name: test
         uses: GabrielBB/xvfb-action@v1
         with:
-            run: make test && ./quee_test
+            - run: make test
+            - run: ./quee_test
