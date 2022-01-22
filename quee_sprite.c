@@ -17,5 +17,5 @@ quee_sprite* create_quee_sprite(quee_texture *texture) {
 
 void destroy_quee_sprite(quee_sprite **sprite) {
     free(*sprite);
-    sprite = NULL;
+    *sprite = NULL;
 }
