@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <SDL.h>
 
+#include "quee_test_helper.h"
 #include "quee_scene_test.h"
 #include "quee_texture_test.h"
 
@@ -11,7 +13,7 @@
 typedef struct quee_test quee_test;
 
 struct quee_test {
-    void (*func_ptr)();
+    quee_test_result (*func_ptr)();
     char *suite;
 };
 
@@ -29,6 +31,7 @@ typedef struct SDL_Renderer SDL_Renderer;
 SDL_Renderer *g_renderer = NULL;
 
 int main(int argc, char** argv) {
+    bool failed = false;
     check_sdl_code(SDL_Init(SDL_INIT_VIDEO));
 
     SDL_Window *window = check_sdl_ptr(
@@ -42,7 +45,14 @@ int main(int argc, char** argv) {
     if(argc == 1) {
         for(int i = 0; i < num_tests; i++) {
             printf("Running test [%d/%d]: ", i + 1, num_tests);
-            tests[i].func_ptr();
+            quee_test_result test_result = tests[i].func_ptr();
+            if(test_result.result) {
+                printf("%s PASSED!\n", test_result.name);
+            }
+            else {
+                printf("%s FAILED!\n", test_result.name);
+                failed = true;
+            }
         }
     }
     // Selective Test Running
@@ -60,7 +70,14 @@ int main(int argc, char** argv) {
 
         for(int i = 0; i < x; i++) {
             printf("Running filtered test [%d/%d]: ", i + 1, x);
-            filtered_tests[i].func_ptr();
+            quee_test_result test_result = filtered_tests[i].func_ptr();
+            if(test_result.result) {
+                printf("%s PASSED!\n", test_result.name);
+            }
+            else {
+                printf("%s FAILED!\n", test_result.name);
+                failed = true;
+            }
         }
     }
 
@@ -68,5 +85,6 @@ int main(int argc, char** argv) {
     SDL_DestroyRenderer(g_renderer);
     SDL_Quit();
 
-    return 0;
+    if(failed) return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
