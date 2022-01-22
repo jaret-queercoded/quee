@@ -17,6 +17,7 @@ struct quee_entity {
 quee_entity * create_quee_entity();
 void destroy_quee_entity(quee_entity **entity);
 int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr);
+void update_quee_entity(quee_entity *entity, unsigned int delta_ticks);
 
 #endif
 

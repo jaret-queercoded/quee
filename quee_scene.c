@@ -132,7 +132,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         quee_texture *texture = 
             get_quee_texture_from_texture_manager(texture_manager, json_object_get_string(entity_path));
         quee_entity *entity = create_quee_entity();
-        check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, create_quee_sprite(texture)));
+        check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, create_quee_sprite(texture, (vec2i){32, 32}, (vec2i){200,100})));
         scene->entities[i] = entity; 
     }
     return scene;
@@ -161,6 +161,12 @@ int quee_scene_add_entity(quee_scene *scene, quee_entity *entity) {
     }
     scene->entities[scene->current_entities++] = entity;
     return 0;
+}
+
+void update_quee_scene(quee_scene *scene, unsigned int delta_ticks) {
+    for(int i = 0; i < scene->current_entities; i++) {
+        update_quee_entity(scene->entities[i], delta_ticks);
+    }
 }
 
 void destroy_quee_scene(quee_scene **scene) {

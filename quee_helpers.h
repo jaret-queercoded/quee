@@ -6,7 +6,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-#define TARGET_FPS 60
+#define TARGET_FPS 120
 #define TICKS_PER_FRAME (1000.0f / TARGET_FPS)
 
 #define MAX_STR_LEN 256

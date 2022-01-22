@@ -35,6 +35,7 @@ void destroy_quee_scene_manager(quee_scene_manager **manager);
 quee_scene* create_quee_scene();
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer *renderer, quee_texture_manager *texture_manager);
 int quee_scene_add_entity(quee_scene *scene, quee_entity *entity);
+void update_quee_scene(quee_scene *scene, unsigned int delta_ticks);
 
 void destroy_quee_scene(quee_scene **scene);
 

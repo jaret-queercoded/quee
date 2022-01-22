@@ -33,10 +33,14 @@ int main(void) {
         scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
     bool quit = false;
 
-    uint32_t frame_start, frame_end;
+    uint32_t frame_start, frame_end, prev_frame_start;
+    unsigned int delta_ticks = 0.0f;
     float ms_elapsed;
+    prev_frame_start = SDL_GetTicks();
     while(!quit) {
         frame_start = SDL_GetTicks();
+        delta_ticks = frame_start - prev_frame_start;
+        printf("delta_ticks: %d\n", delta_ticks);
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -45,13 +49,18 @@ int main(void) {
                     break;
             }
         }
-        
+        // Update scenes and do physics
+        for(int i = 0; i < scene_manager->current_capacity; i++) {
+            update_quee_scene(scene_manager->scenes[i], delta_ticks);
+        }
+         
         // Render all scenes 
         // The scenes will also tell if they want to be rendered
         SDL_RenderClear(g_renderer);
         for (int i = 0; i < scene_manager->current_capacity; i++) {
-          check_quee_code(
-              quee_render_scene(g_renderer, scene_manager->scenes[i]));
+            check_quee_code(
+                quee_render_scene(g_renderer, scene_manager->scenes[i])
+            );
         }
         SDL_RenderPresent(g_renderer);
         frame_end = SDL_GetTicks();
@@ -62,6 +71,7 @@ int main(void) {
         /*printf("FPS: %2f Ticks: %f\n", 1000.0f / (TICKS_PER_FRAME - ms_elapsed), ms_elapsed);*/
 
         SDL_Delay(floor(TICKS_PER_FRAME - ms_elapsed));
+        prev_frame_start = frame_start;
     }
 
     destroy_quee_scene_manager(&scene_manager);
