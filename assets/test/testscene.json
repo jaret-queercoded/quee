@@ -1,5 +1,5 @@
 {
     "name" : "test_scene1",
     "render" : true,
-    "sprites": []
+    "sprites": ["assets/test/test.png"]
 }
