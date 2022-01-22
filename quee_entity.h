@@ -2,13 +2,15 @@
 #define QUEE_ENTITY_H_
 
 #include "quee_sprite.h"
+#include <uuid/uuid.h>
 
 #define QUEE_SPRITE_BIT 0x01 
 
 typedef struct quee_entity quee_entity;
 
 struct quee_entity {
-    unsigned int type : 1;
+    unsigned int id;
+    unsigned int type;
     quee_sprite *sprite; 
 };
 

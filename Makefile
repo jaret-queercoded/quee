@@ -1,6 +1,7 @@
 CC=clang
-CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image json-c` -std=c11
-LIBS=`pkg-config --libs sdl2 SDL2_image json-c` -lm
+PKGS=sdl2 SDL2_image json-c
+CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags $(PKGS)` -std=c11
+LIBS=`pkg-config --libs $(PKGS)` -lm
 EXEC_FILE=quee
 TEST_FILE=quee_test
 TEST_DIR=test

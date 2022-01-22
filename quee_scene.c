@@ -132,7 +132,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         quee_texture *texture = 
             get_quee_texture_from_texture_manager(texture_manager, json_object_get_string(entity_path));
         quee_entity *entity = create_quee_entity();
-        add_to_quee_entity(entity, QUEE_SPRITE_BIT, create_quee_sprite(texture));
+        check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, create_quee_sprite(texture)));
         scene->entities[i] = entity; 
     }
     return scene;
