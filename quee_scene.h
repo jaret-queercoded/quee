@@ -10,7 +10,7 @@ typedef struct SDL_Renderer SDL_Renderer;
 
 typedef struct quee_scene quee_scene;
 typedef struct quee_scene_manager quee_scene_manager;
-typedef struct quee_sprite quee_sprite;
+typedef struct quee_entity quee_entity;
 typedef struct quee_texture_manager quee_texture_manager;
 
 struct quee_scene_manager {
@@ -22,9 +22,9 @@ struct quee_scene_manager {
 struct quee_scene {
     char name[MAX_STR_LEN];
     bool render;
-    uint64_t max_sprites;
-    uint64_t current_sprites;
-    quee_sprite** sprites;
+    uint64_t max_entities;
+    uint64_t current_entities;
+    quee_entity** entities;
 };
 
 quee_scene_manager* create_quee_scene_manager(uint64_t capacity);
@@ -34,7 +34,7 @@ void destroy_quee_scene_manager(quee_scene_manager **manager);
 
 quee_scene* create_quee_scene();
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer *renderer, quee_texture_manager *texture_manager);
-int quee_scene_add_sprite(quee_scene *scene, quee_sprite *sprite);
+int quee_scene_add_entity(quee_scene *scene, quee_entity *entity);
 
 void destroy_quee_scene(quee_scene **scene);
 

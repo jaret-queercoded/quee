@@ -25,7 +25,7 @@ void* check_sdl_ptr(void *ptr);
 
 void check_quee_code(int code);
 void* check_quee_ptr(void *ptr);
-void quee_set_error(char* msg);
+void quee_set_error(char* format, ...);
 char* quee_get_error();
 
 unsigned long hash(unsigned char *str);

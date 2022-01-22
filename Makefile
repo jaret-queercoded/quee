@@ -1,12 +1,13 @@
 CC=clang
-CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags sdl2 SDL2_image json-c` -std=c11
-LIBS=`pkg-config --libs sdl2 SDL2_image json-c` -lm
+PKGS=sdl2 SDL2_image json-c
+CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags $(PKGS)` -std=c11
+LIBS=`pkg-config --libs $(PKGS)` -lm
 EXEC_FILE=quee
 TEST_FILE=quee_test
 TEST_DIR=test
 OBJDIR=objs
 
-OBJECTS=$(addprefix $(OBJDIR)/, quee_helpers.o quee_sprite.o quee_scene.o quee_renderer.o quee_texture.o)
+OBJECTS=$(addprefix $(OBJDIR)/, quee_helpers.o quee_entity.o quee_sprite.o quee_scene.o quee_renderer.o quee_texture.o)
 MAIN_OBJECT=$(addprefix $(OBJDIR)/, main.o)
 TEST_OBJECTS=$(addprefix $(OBJDIR)/$(TEST_DIR)/, main.o quee_test_helper.o quee_scene_test.o quee_texture_test.o quee_sprite_test.o)
 TEST_OBJECTS+=$(OBJECTS)
@@ -18,7 +19,7 @@ test: CCFLAGS += -DDEBUG -g
 debug: CCFLAGS += -DDEBUG -g
 debug: $(EXEC_FILE)
 
-$(EXEC_FILE): CCFLAGS += -O3
+#$(EXEC_FILE): CCFLAGS += -O3
 $(EXEC_FILE): $(OBJECTS) $(MAIN_OBJECT) 
 	$(CC) $^ $(LIBS) -o $@
 

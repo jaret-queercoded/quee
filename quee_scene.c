@@ -1,7 +1,8 @@
 #include "quee_scene.h"
 #include "quee_helpers.h"
-#include "quee_sprite.h"
+#include "quee_entity.h"
 #include "quee_texture.h"
+#include "quee_sprite.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,11 +90,11 @@ void destroy_quee_scene_manager(quee_scene_manager **manager) {
 
 quee_scene* create_quee_scene() {
     quee_scene* scene = malloc(sizeof(quee_scene));
-    scene->current_sprites = 0;
-    scene->max_sprites = 0;
+    scene->current_entities = 0;
+    scene->max_entities = 0;
     strcpy(scene->name, "");
     scene->render = NULL;
-    scene->sprites = NULL;
+    scene->entities = NULL;
     return scene;
 }
 
@@ -101,8 +102,8 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
     FILE *fp;
     char buffer[1024];
     json_object *parsed_json;
-    json_object *sprites;
-    json_object *sprite_path;
+    json_object *entities;
+    json_object *entity_path;
     json_object *name;
     json_object *render;
     quee_scene* scene = malloc(sizeof(quee_scene));
@@ -122,49 +123,51 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
     json_object_object_get_ex(parsed_json, "render", &render);
     scene->render = json_object_get_boolean(render);
 
-    json_object_object_get_ex(parsed_json, "sprites", &sprites);
-    scene->current_sprites = json_object_array_length(sprites); 
-    scene->max_sprites = scene->current_sprites;
-    scene->sprites = malloc(scene->current_sprites * sizeof(quee_sprite));
-    for(size_t i = 0; i < scene->current_sprites; i++) {
-        sprite_path = json_object_array_get_idx(sprites, i);
+    json_object_object_get_ex(parsed_json, "entities", &entities);
+    scene->current_entities = json_object_array_length(entities); 
+    scene->max_entities = scene->current_entities;
+    scene->entities = malloc(scene->current_entities * sizeof(quee_entity));
+    for(size_t i = 0; i < scene->current_entities; i++) {
+        entity_path = json_object_array_get_idx(entities, i);
         quee_texture *texture = 
-            get_quee_texture_from_texture_manager(texture_manager, json_object_get_string(sprite_path));
-        scene->sprites[i] = create_quee_sprite(texture); 
+            get_quee_texture_from_texture_manager(texture_manager, json_object_get_string(entity_path));
+        quee_entity *entity = create_quee_entity();
+        check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, create_quee_sprite(texture)));
+        scene->entities[i] = entity; 
     }
     return scene;
 }
 
-int quee_scene_add_sprite(quee_scene *scene, quee_sprite *sprite) {
-    if(sprite == NULL) {
-        quee_set_error("Tried to add a null sprite!");
+int quee_scene_add_entity(quee_scene *scene, quee_entity *entity) {
+    if(entity == NULL) {
+        quee_set_error("Tried to add a null entity!");
         return -1;
     }
-    if(scene->current_sprites == scene->max_sprites) {
-        scene->max_sprites *= 2;
-        quee_sprite **new_sprites = malloc(sizeof(quee_scene *) * scene->max_sprites); 
+    if(scene->current_entities == scene->max_entities) {
+        scene->max_entities *= 2;
+        quee_entity **new_entities = malloc(sizeof(quee_scene *) * scene->max_entities); 
         int i = 0;
         // Copy the pointers from the old
-        for(; i < scene->current_sprites; i++) {
-            new_sprites[i] = scene->sprites[i];
+        for(; i < scene->current_entities; i++) {
+            new_entities[i] = scene->entities[i];
         }
         // NULL out the rest
-        for(; i < scene->max_sprites; i++) {
-            new_sprites[i] = NULL;
+        for(; i < scene->max_entities; i++) {
+            new_entities[i] = NULL;
         }
-        // Free the old sprites pointer so we don't leak
-        free(scene->sprites);
-        scene->sprites = new_sprites;
+        // Free the old entities pointer so we don't leak
+        free(scene->entities);
+        scene->entities = new_entities;
     }
-    scene->sprites[scene->current_sprites++] = sprite;
+    scene->entities[scene->current_entities++] = entity;
     return 0;
 }
 
 void destroy_quee_scene(quee_scene **scene) {
-    for(int i = 0; i < (*scene)->current_sprites; i++) {
-        destroy_quee_sprite(&(*scene)->sprites[i]);
+    for(int i = 0; i < (*scene)->current_entities; i++) {
+        destroy_quee_entity(&(*scene)->entities[i]);
     }
-    free((*scene)->sprites);
+    free((*scene)->entities);
     free(*scene);
     *scene = NULL;
 }

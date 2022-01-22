@@ -52,8 +52,11 @@ void* check_quee_ptr(void *ptr) {
 }
 
 
-void quee_set_error(char* msg) {
-    strcpy(quee_error_message, msg);
+void quee_set_error(char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    vsprintf(quee_error_message, format, args);
+    va_end(args);
 }
 
 //djb2 hash function
