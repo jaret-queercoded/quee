@@ -30,7 +30,7 @@ quee_texture* create_quee_texture_from_image(const char *file) {
 void destroy_quee_texture(quee_texture **texture) {
     SDL_DestroyTexture((*texture)->texture);
     free(*texture);
-    texture = NULL;
+    *texture = NULL;
 }
 
 
@@ -53,7 +53,7 @@ void destroy_quee_texture_manager(quee_texture_manager **manager) {
     }
     free((*manager)->nodes);
     free(*manager);
-    manager = NULL;
+    *manager = NULL;
 }
 
 quee_texture_node *create_quee_texture_node(const char *file_path, quee_texture_node *next) {
