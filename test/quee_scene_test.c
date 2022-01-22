@@ -52,7 +52,6 @@ quee_test_result test_quee_scene_manager_add_scene() {
 }
 
 quee_test_result test_quee_scene_manager_remove_scene() {
-    QUEE_ASSERT(false);
     const int max_cap = 2;
     quee_scene_manager* manager = create_quee_scene_manager(max_cap);
     quee_scene *s1 = create_quee_scene();
