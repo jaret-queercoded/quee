@@ -27,11 +27,13 @@ jobs:
       - name: install_dependencies
         run: |
           sudo apt-get update -y -qq
-          sudo apt-get install libsdl2-dev libsdl2-image-dev libjson-c-dev xvfb
+          sudo apt-get install libsdl2-dev libsdl2-image-dev libjson-c-dev
       - name: build
         run: make
       - name: build test
         run: make clean test
       - name: run tests
-        run: xvfb-run --auto-servernum ./quee_test
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: ./quee_test
 
