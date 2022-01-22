@@ -31,7 +31,7 @@ typedef struct SDL_Renderer SDL_Renderer;
 SDL_Renderer *g_renderer = NULL;
 
 int main(int argc, char** argv) {
-    bool failed = true;
+    bool failed = false;
     check_sdl_code(SDL_Init(SDL_INIT_VIDEO));
 
     SDL_Window *window = check_sdl_ptr(
