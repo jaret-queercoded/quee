@@ -30,5 +30,10 @@ jobs:
           sudo apt-get install libsdl2-dev libsdl2-image-dev libjson-c-dev
       - name: build
         run: make
-      - name: test
-        run: make test && ./quee_test
+      - name: build test
+        run: make clean test
+      - name: run tests
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          run: ./quee_test
+
