@@ -7,6 +7,7 @@
 #include "quee_test_helper.h"
 #include "quee_scene_test.h"
 #include "quee_texture_test.h"
+#include "quee_sprite_test.h"
 
 #include "../quee_helpers.h"
 
@@ -27,6 +28,7 @@ quee_test tests[] = {
     {.func_ptr = test_quee_texture_manager_creation_and_deletion, .suite = QUEE_TEXTURE_MANAGER_SUITE},
     {.func_ptr = test_quee_get_texture, .suite = QUEE_TEXTURE_MANAGER_SUITE},
     {.func_ptr = test_quee_remove_texture, .suite = QUEE_TEXTURE_MANAGER_SUITE},
+    {.func_ptr = test_quee_sprite_creation, .suite = QUEE_SPRITE_SUITE},
 };
 
 //We use a global render pointer in c so I just make a null one here for tests
@@ -82,7 +84,6 @@ int main(int argc, char** argv) {
                 printf("%s PASSED!\n", test_result.name);
             }
             else {
-                printf("%s FAILED with error: %s at %s:%d\n", test_result.name, test_result.msg, test_result.file, test_result.line);
                 printf("%s FAILED!", test_result.name);
                 failures[num_failures++] = test_result;
             }
@@ -97,7 +98,7 @@ int main(int argc, char** argv) {
         printf("\n\nFAILURES:\n");
         for(int i = 0; i < num_failures; i++) {
             quee_test_result test_result = failures[i];
-            printf("%s failed with error %s at %s:%d\n", test_result.name, test_result.msg, test_result.file, test_result.line); 
+            printf("%s failed with error: %s at %s:%d\n", test_result.name, test_result.msg, test_result.file, test_result.line); 
         }
         return EXIT_FAILURE;
     }
