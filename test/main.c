@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include <SDL.h>
+#undef main
 
 #include "quee_test_helper.h"
 #include "quee_scene_test.h"
@@ -49,7 +50,7 @@ int main(int argc, char** argv) {
     int num_tests = sizeof(tests) / sizeof(quee_test);
 
     // Array to save failures
-    quee_test_result failures[num_tests];
+    quee_test_result failures[100];
     int num_failures = 0;
     if(argc == 1) {
         for(int i = 0; i < num_tests; i++) {
@@ -66,7 +67,7 @@ int main(int argc, char** argv) {
     }
     // Selective Test Running
     else {
-        quee_test filtered_tests[num_tests];
+        quee_test filtered_tests[100];
         int x = 0;
         for(int i = 1; i < argc; i++) {
             char* target = argv[i];

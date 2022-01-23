@@ -1,7 +1,6 @@
 #include "quee_entity.h"
 
 #include <stdlib.h>
-#include <uuid/uuid.h>
 
 #include "quee_helpers.h"
 #include "quee_sprite.h"

@@ -2,7 +2,6 @@
 #define QUEE_ENTITY_H_
 
 #include "quee_sprite.h"
-#include <uuid/uuid.h>
 
 #define QUEE_SPRITE_BIT 0x01 
 
