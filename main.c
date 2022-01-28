@@ -40,13 +40,19 @@ int main(void) {
     while(!quit) {
         frame_start = SDL_GetTicks();
         delta_ticks = frame_start - prev_frame_start;
-        printf("delta_ticks: %d\n", delta_ticks);
+        /*printf("delta_ticks: %d\n", delta_ticks);*/
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
                     quit = true;
                     break;
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        case SDLK_ESCAPE:
+                            quit = true;
+                            break;
+                    }
             }
         }
         // Update scenes and do physics

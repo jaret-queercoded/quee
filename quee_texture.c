@@ -9,7 +9,7 @@
 
 extern SDL_Renderer *g_renderer;
 
-quee_texture* create_quee_texture_from_image(const char *file) {
+quee_texture* create_quee_texture(const char *file) {
     quee_texture* texture = malloc(sizeof(quee_texture));
 
     // Get the texture from the file by putting it in a surface
@@ -58,12 +58,12 @@ void destroy_quee_texture_manager(quee_texture_manager **manager) {
 
 quee_texture_node *create_quee_texture_node(const char *file_path, quee_texture_node *next) {
     quee_texture_node *node = malloc(sizeof(quee_texture_node));
-    node->texture = create_quee_texture_from_image(file_path);
+    node->texture = create_quee_texture(file_path);
     node->next = next;
     return node;
 }
 
-quee_texture* get_quee_texture_from_texture_manager(quee_texture_manager *manager, const char *file_path) {
+quee_texture* quee_texture_manager_get(quee_texture_manager *manager, const char *file_path) {
     int index = hash((unsigned char*)file_path) % manager->capacity;
     quee_texture *texture = NULL;
     quee_texture_node *node = NULL;
@@ -90,7 +90,7 @@ quee_texture* get_quee_texture_from_texture_manager(quee_texture_manager *manage
     return texture;
 }
 
-int remove_quee_texture_from_texture_manager(quee_texture_manager *manager, const char *file_path) {
+int quee_texture_manager_remove(quee_texture_manager *manager, const char *file_path) {
     int index = hash((unsigned char*)file_path) % manager->capacity;
     quee_texture_node *prev, *curr;
     curr = manager->nodes[index];

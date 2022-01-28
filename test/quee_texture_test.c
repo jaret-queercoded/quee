@@ -9,7 +9,7 @@
 const char *fp = "assets/test/test.png";
 
 quee_test_result test_quee_texture_creation_and_deletion() {
-    quee_texture *texture = create_quee_texture_from_image(fp);
+    quee_texture *texture = create_quee_texture(fp);
     QUEE_ASSERT(texture, "Didn't get a quee texture back!");
     QUEE_ASSERT(strcmp(texture->name, fp) == 0, "Name was not what was expected!");
     QUEE_ASSERT(texture->texture, "Quee texture didn't have a sdl2 texture!");
@@ -29,7 +29,7 @@ quee_test_result test_quee_texture_manager_creation_and_deletion() {
 
 quee_test_result test_quee_get_texture() {
     quee_texture_manager *manager = create_quee_texture_manager(1);
-    quee_texture *texture = get_quee_texture_from_texture_manager(manager, fp);
+    quee_texture *texture = quee_texture_manager_get(manager, fp);
     QUEE_ASSERT(texture, "We didn't get a texture back");
     destroy_quee_texture_manager(&manager);
     return QUEE_PASSED;
@@ -37,9 +37,9 @@ quee_test_result test_quee_get_texture() {
 
 quee_test_result test_quee_remove_texture() {
     quee_texture_manager *manager = create_quee_texture_manager(1);
-    get_quee_texture_from_texture_manager(manager, fp);
-    QUEE_ASSERT(remove_quee_texture_from_texture_manager(manager, fp) == 0, "Couldn't remove the texture");
-    QUEE_ASSERT(remove_quee_texture_from_texture_manager(manager, fp) == -1, "Shouldn't have been able to remove");
+    quee_texture_manager_get(manager, fp);
+    QUEE_ASSERT(quee_texture_manager_remove(manager, fp) == 0, "Couldn't remove the texture");
+    QUEE_ASSERT(quee_texture_manager_remove(manager, fp) == -1, "Shouldn't have been able to remove");
     destroy_quee_texture_manager(&manager);
     return QUEE_PASSED;
 }

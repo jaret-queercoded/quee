@@ -27,13 +27,13 @@ struct quee_texture_manager {
     uint64_t capacity;
 };
 
-quee_texture* create_quee_texture_from_image(const char *file);
+quee_texture* create_quee_texture(const char *file);
 void destroy_quee_texture(quee_texture **texture);
 
 quee_texture_manager* create_quee_texture_manager(uint64_t capacity);
 void destroy_quee_texture_manager(quee_texture_manager **manager);
-quee_texture* get_quee_texture_from_texture_manager(quee_texture_manager *manager, const char *file_path);
-int remove_quee_texture_from_texture_manager(quee_texture_manager *manager, const char *file_path);
+quee_texture* quee_texture_manager_get(quee_texture_manager *manager, const char *file_path);
+int quee_texture_manager_remove(quee_texture_manager *manager, const char *file_path);
 
 #endif
 
