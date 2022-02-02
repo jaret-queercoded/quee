@@ -1,6 +1,6 @@
 CC=clang
 PKGS=sdl2 SDL2_image json-c
-CCFLAGS=-Wall -Werror -pedantic -c `pkg-config --cflags $(PKGS)` -std=c11
+CCFLAGS=-Wall -Werror -pedantic -DDEBUG -g -c `pkg-config --cflags $(PKGS)` -std=c11
 LIBS=`pkg-config --libs $(PKGS)` -lm
 EXEC_FILE=quee
 TEST_FILE=quee_test
@@ -14,12 +14,9 @@ TEST_OBJECTS+=$(OBJECTS)
 
 all: $(EXEC_FILE)
 test: $(TEST_FILE)
-test: CCFLAGS += -DDEBUG -g
+test_run: test
+	@./$(TEST_FILE)
 
-debug: CCFLAGS += -DDEBUG -g
-debug: $(EXEC_FILE)
-
-#$(EXEC_FILE): CCFLAGS += -O3
 $(EXEC_FILE): $(OBJECTS) $(MAIN_OBJECT) 
 	$(CC) $^ $(LIBS) -o $@
 
