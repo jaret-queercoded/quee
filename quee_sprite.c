@@ -46,7 +46,7 @@ int quee_sprite_add_frame(quee_sprite *sprite, quee_frame frame) {
 }
 
 void destroy_quee_sprite(quee_sprite **sprite) {
-    for(int i = 0; i < (*sprite)->num_frames; i++) {
+    for(int i = 0; i < (*sprite)->max_frames; i++) {
         free((*sprite)->frames[i]);
     }
     free((*sprite)->frames);
