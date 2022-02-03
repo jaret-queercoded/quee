@@ -14,7 +14,7 @@ TEST_OBJECTS+=$(OBJECTS)
 
 all: $(EXEC_FILE)
 test: $(TEST_FILE)
-test_run: test
+runtest: test
 	@./$(TEST_FILE)
 
 $(EXEC_FILE): $(OBJECTS) $(MAIN_OBJECT) 

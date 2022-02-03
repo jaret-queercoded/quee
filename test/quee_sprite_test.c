@@ -6,10 +6,52 @@
 
 quee_test_result test_quee_sprite_creation() {
     quee_texture_manager *manager = create_quee_texture_manager(1);
-    quee_sprite *sprite = create_quee_sprite(quee_texture_manager_get(manager, "assets/test/test.png"), (vec2i){0,0}, (vec2i){0,0});
+    quee_sprite *sprite = create_quee_sprite(quee_texture_manager_get(manager, "assets/test/test.png"));
     QUEE_ASSERT(sprite, "We didn't get a sprite back");
     destroy_quee_sprite(&sprite);
     QUEE_ASSERT(sprite == NULL, "Sprite destroy left a dangling pointer");
+    destroy_quee_texture_manager(&manager);
+    return QUEE_PASSED;
+}
+
+quee_test_result test_quee_sprite_add_frame() {
+    quee_texture_manager *manager = create_quee_texture_manager(1);
+    quee_sprite *sprite = create_quee_sprite(quee_texture_manager_get(manager, "assets/test/test.png"));
+    quee_sprite_init_frames(sprite, 2);
+    QUEE_ASSERT(sprite->max_frames == 2, "Should have a max of two frames now!");
+    QUEE_ASSERT(sprite->frame_index == 0, "Should have a frame index of 1");
+    quee_frame frame1 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 100};
+    quee_frame frame2 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 1000};
+    quee_frame frame3 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 10000};
+    QUEE_ASSERT(quee_sprite_add_frame(sprite, frame1) == 0, "We should have been able to add frame1");
+    QUEE_ASSERT(sprite->num_frames == 1, "Should of had one frame");
+    QUEE_ASSERT(quee_sprite_add_frame(sprite, frame2) == 0, "We should have been able to add frame2");
+    QUEE_ASSERT(sprite->num_frames == 2, "Should of had two frames");
+    QUEE_ASSERT(quee_sprite_add_frame(sprite, frame3) == -1, "We should have not been able to add frame3");
+    QUEE_ASSERT(sprite->num_frames == 2, "Should of still had two frames");
+    destroy_quee_sprite(&sprite);
+    destroy_quee_texture_manager(&manager);
+    return QUEE_PASSED;
+}
+
+quee_test_result test_quee_sprite_update() {
+    quee_texture_manager *manager = create_quee_texture_manager(1);
+    quee_sprite *sprite = create_quee_sprite(quee_texture_manager_get(manager, "assets/test/test.png"));
+    quee_sprite_init_frames(sprite, 2);
+    QUEE_ASSERT(sprite->max_frames == 2, "Should have a max of two frames now!");
+    QUEE_ASSERT(sprite->frame_index == 0, "Should have a frame index of 1");
+    quee_frame frame1 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 100};
+    quee_frame frame2 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 1000};
+    quee_sprite_add_frame(sprite, frame1);
+    quee_sprite_add_frame(sprite, frame2);
+    quee_frame *f_ptr = sprite->curr_frame;
+    update_quee_sprite(sprite, 90);
+    QUEE_ASSERT(f_ptr == sprite->curr_frame, "We should still be on the first frame");
+    update_quee_sprite(sprite, 10);
+    QUEE_ASSERT(f_ptr != sprite->curr_frame, "We should be on the second frame");
+    update_quee_sprite(sprite, 1000);
+    QUEE_ASSERT(f_ptr == sprite->curr_frame, "We should be back on the first frame");
+    destroy_quee_sprite(&sprite);
     destroy_quee_texture_manager(&manager);
     return QUEE_PASSED;
 }
