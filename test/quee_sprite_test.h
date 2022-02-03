@@ -6,6 +6,8 @@
 #define QUEE_SPRITE_SUITE "quee_sprite"
 
 quee_test_result test_quee_sprite_creation();
+quee_test_result test_quee_sprite_add_frame();
+quee_test_result test_quee_sprite_update();
 
 #endif 
 

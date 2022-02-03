@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include <json_object.h>
 #include <json_tokener.h>
@@ -102,10 +103,11 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
     FILE *fp;
     char buffer[1024];
     json_object *parsed_json;
-    json_object *entities;
-    json_object *entity_path;
-    json_object *name;
-    json_object *render;
+    json_object *entities_json;
+    json_object *entity_json;
+    json_object *enetity_type_json;
+    json_object *scene_name_json;
+    json_object *render_json;
     quee_scene* scene = malloc(sizeof(quee_scene));
     fp = fopen(scene_path, "r");
     if(fp == NULL) {
@@ -117,22 +119,50 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
 
     parsed_json = json_tokener_parse(buffer);
 
-    json_object_object_get_ex(parsed_json, "name", &name);
-    strcpy(scene->name, json_object_get_string(name));
+    json_object_object_get_ex(parsed_json, "name", &scene_name_json);
+    strcpy(scene->name, json_object_get_string(scene_name_json));
 
-    json_object_object_get_ex(parsed_json, "render", &render);
-    scene->render = json_object_get_boolean(render);
+    json_object_object_get_ex(parsed_json, "render", &render_json);
+    scene->render = json_object_get_boolean(render_json);
 
-    json_object_object_get_ex(parsed_json, "entities", &entities);
-    scene->current_entities = json_object_array_length(entities); 
+    json_object_object_get_ex(parsed_json, "entities", &entities_json);
+    scene->current_entities = json_object_array_length(entities_json);
     scene->max_entities = scene->current_entities;
     scene->entities = malloc(scene->current_entities * sizeof(quee_entity));
     for(size_t i = 0; i < scene->current_entities; i++) {
-        entity_path = json_object_array_get_idx(entities, i);
-        quee_texture *texture = 
-            quee_texture_manager_get(texture_manager, json_object_get_string(entity_path));
+        entity_json = json_object_array_get_idx(entities_json, i);
+        json_object_object_get_ex(entity_json, "type", &enetity_type_json);
         quee_entity *entity = create_quee_entity();
-        check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, create_quee_sprite(texture, (vec2i){32, 32}, (vec2i){200,100})));
+        int expected_type = json_object_get_int(enetity_type_json);
+        //Check the type and load each part of the type
+        if(expected_type & QUEE_SPRITE_BIT) {
+            // Get the path to the texture
+            json_object *sprite_path_json;
+            json_object_object_get_ex(entity_json, "path", &sprite_path_json);
+            quee_texture *texture = 
+                quee_texture_manager_get(texture_manager, json_object_get_string(sprite_path_json));
+            quee_sprite *sprite = create_quee_sprite(texture);
+            // Load the frame information
+            json_object *frame_array_json;
+            json_object_object_get_ex(entity_json, "frames", &frame_array_json);
+            int number_of_frames = json_object_array_length(frame_array_json);
+            quee_sprite_init_frames(sprite, number_of_frames);
+            json_object *frame_info_json;
+            for(size_t i = 0; i < number_of_frames; i++) {
+                frame_info_json = json_object_array_get_idx(frame_array_json, i);
+                int x = json_object_get_int(json_object_array_get_idx(frame_info_json, 0));
+                int y = json_object_get_int(json_object_array_get_idx(frame_info_json, 1));
+                int w = json_object_get_int(json_object_array_get_idx(frame_info_json, 2));
+                int h = json_object_get_int(json_object_array_get_idx(frame_info_json, 3));
+                int ticks = json_object_get_int(json_object_array_get_idx(frame_info_json, 4));
+                quee_frame frame = { .rect = { .x = x, .y = y, .w = w, .h = h }, .ticks = ticks };
+                quee_sprite_add_frame(sprite, frame);
+            }
+            check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, sprite));
+        }
+        assert(entity->type == expected_type);
+        quee_rect pos = {.x = 100, .y = 100, .w = 32, .h = 32};
+        entity->pos = pos;
         scene->entities[i] = entity; 
     }
     return scene;

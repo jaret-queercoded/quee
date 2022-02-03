@@ -30,6 +30,8 @@ quee_test tests[] = {
     {.func_ptr = test_quee_get_texture, .suite = QUEE_TEXTURE_MANAGER_SUITE},
     {.func_ptr = test_quee_remove_texture, .suite = QUEE_TEXTURE_MANAGER_SUITE},
     {.func_ptr = test_quee_sprite_creation, .suite = QUEE_SPRITE_SUITE},
+    {.func_ptr = test_quee_sprite_add_frame, .suite = QUEE_SPRITE_SUITE},
+    {.func_ptr = test_quee_sprite_update, .suite = QUEE_SPRITE_SUITE},
 };
 
 //We use a global render pointer in c so I just make a null one here for tests

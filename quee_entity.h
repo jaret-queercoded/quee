@@ -9,8 +9,9 @@ typedef struct quee_entity quee_entity;
 
 struct quee_entity {
     unsigned int id;
-    unsigned int type;
+    unsigned int type:1;
     quee_sprite *sprite; 
+    quee_rect pos;
 };
 
 quee_entity * create_quee_entity();
