@@ -13,6 +13,10 @@ quee_sprite* create_quee_sprite(quee_texture *texture) {
     sprite->texture = texture;
     sprite->frames = NULL;
     sprite->curr_frame = NULL;
+    sprite->max_frames = 0;
+    sprite->num_frames = 0;
+    sprite->frame_index = 0;
+    sprite->ticks_on_frame = 0;
     
     return sprite;
 }
@@ -26,7 +30,6 @@ int quee_sprite_init_frames(quee_sprite *sprite, int number_of_frames) {
         sprite->frames[i] = malloc(sizeof(quee_frame));
     }
     sprite->curr_frame = sprite->frames[0];
-    sprite->num_frames = 0;
     return 0;
 }
 
