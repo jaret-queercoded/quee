@@ -13,6 +13,7 @@
 #include "quee_sprite.h"
 #include "quee_texture.h"
 #include "quee_script.h"
+#include "quee_entity.h"
 
 SDL_Renderer* g_renderer;
 
@@ -32,8 +33,7 @@ int main(void) {
     quee_script_manager *script_manager = create_quee_script_manager(10);
 
     check_quee_code(quee_scene_manager_insert(
-        scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
-    check_quee_code(add_quee_script(script_manager, "assets/scripts/hello.lua"));
+        scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager, script_manager)));
     bool quit = false;
 
     uint32_t frame_start, frame_end, prev_frame_start;

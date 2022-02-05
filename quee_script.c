@@ -14,16 +14,23 @@ quee_script_manager * create_quee_script_manager(int max_scripts) {
     return manager;
 }
 
-int add_quee_script(quee_script_manager *manager, char *path) {
+quee_script * create_quee_script(quee_script_manager *manager, const char *path) {
+    if(path == NULL) {
+        quee_set_error("Attempted to load a script with a null path");
+        return NULL;
+    }
     if(luaL_loadfile(manager->lua_state, path)) {
         quee_set_error("Couldn't load lua script %s", path);
-        return -1;
+        return NULL;
     }
+    quee_script *script = malloc(sizeof(quee_script));
+    script->path = malloc(sizeof(char) * (strlen(path) + 1));
+    strcpy(script->path, path);
     lua_pcall(manager->lua_state, 0, 0, 0);
-    return 0;
+    return script;
 }
 
-int run_quee_script_function(quee_script_manager *manager, char *function) {
+int run_quee_script_function(quee_script_manager *manager, const char *function) {
     lua_getglobal(manager->lua_state, function);
     if(lua_pcall(manager->lua_state, 0, 0, 0)) {
         quee_set_error("Couldn't run lua function %s", function);
@@ -36,4 +43,9 @@ void destroy_quee_script_manager(quee_script_manager **manager) {
     lua_close((*manager)->lua_state);
     free(*manager);
     manager = NULL;
+}
+
+void destroy_quee_script(quee_script **script) {
+    free((*script)->path);
+    script = NULL;
 }

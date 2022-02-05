@@ -1,6 +1,7 @@
 #include "quee_scene.h"
 #include "quee_helpers.h"
 #include "quee_entity.h"
+#include "quee_script.h"
 #include "quee_texture.h"
 #include "quee_sprite.h"
 
@@ -99,7 +100,7 @@ quee_scene* create_quee_scene() {
     return scene;
 }
 
-quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager) {
+quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager, quee_script_manager *script_manager) {
     FILE *fp;
     char buffer[1024];
     json_object *parsed_json;
@@ -135,12 +136,13 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         quee_entity *entity = create_quee_entity();
         int expected_type = json_object_get_int(enetity_type_json);
         //Check the type and load each part of the type
+        //Loading sprite
         if(expected_type & QUEE_SPRITE_BIT) {
             // Get the path to the texture
             json_object *sprite_path_json;
             json_object_object_get_ex(entity_json, "path", &sprite_path_json);
             quee_texture *texture = 
-                quee_texture_manager_get(texture_manager, json_object_get_string(sprite_path_json));
+                check_quee_ptr(quee_texture_manager_get(texture_manager, json_object_get_string(sprite_path_json)));
             quee_sprite *sprite = create_quee_sprite(texture);
             // Load the frame information
             json_object *frame_array_json;
@@ -159,6 +161,15 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
                 quee_sprite_add_frame(sprite, frame);
             }
             check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, sprite));
+        }
+        //Loading script
+        if(expected_type & QUEE_SCRIPT_BIT) {
+            json_object *script_path_json;
+            json_object_object_get_ex(entity_json, "script", &script_path_json);
+            const char *path = json_object_get_string(script_path_json);
+            quee_script *script = 
+                check_quee_ptr(create_quee_script(script_manager, path));
+            check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
         }
         assert(entity->type == expected_type);
         quee_rect pos = {.x = 100, .y = 100, .w = 32, .h = 32};
