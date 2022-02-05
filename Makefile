@@ -46,3 +46,7 @@ $(OBJDIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
 .PHONY: clean
 clean:
 	rm -rf $(OBJDIR) $(EXEC_FILE) $(TEST_FILE)
+
+.PHONY: lua_clean
+lua_clean:
+	rm -rf lua/
