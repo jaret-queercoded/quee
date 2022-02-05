@@ -10,14 +10,11 @@ typedef struct quee_script quee_script;
 
 struct quee_script_manager {
     lua_State *lua_state;
-    char **scripts;
-    uint64_t max_scripts;
-    uint64_t curr_scripts;
 };
 
 quee_script_manager * create_quee_script_manager(int max_scripts);
 int add_quee_script(quee_script_manager *manager, char *path);
-int run_quee_scripts(quee_script_manager *manager, char *function);
+int run_quee_script_function(quee_script_manager *manager, char *function);
 void destroy_quee_script_manager(quee_script_manager **manager);
 
 #endif
