@@ -1,13 +1,13 @@
 CC=clang
-PKGS=sdl2 SDL2_image json-c
+PKGS=sdl2 SDL2_image json-c lua
 CCFLAGS=-Wall -Werror -pedantic -DDEBUG -g -c `pkg-config --cflags $(PKGS)` -std=c11
-LIBS=`pkg-config --libs $(PKGS)` -lm
+LIBS=`pkg-config --libs $(PKGS)` -lm -llua
 EXEC_FILE=quee
 TEST_FILE=quee_test
 TEST_DIR=test
 OBJDIR=objs
 
-OBJECTS=$(addprefix $(OBJDIR)/, quee_helpers.o quee_entity.o quee_sprite.o quee_scene.o quee_renderer.o quee_texture.o)
+OBJECTS=$(addprefix $(OBJDIR)/, quee_helpers.o quee_entity.o quee_sprite.o quee_scene.o quee_renderer.o quee_texture.o quee_script.o)
 MAIN_OBJECT=$(addprefix $(OBJDIR)/, main.o)
 TEST_OBJECTS=$(addprefix $(OBJDIR)/$(TEST_DIR)/, main.o quee_test_helper.o quee_scene_test.o quee_texture_test.o quee_sprite_test.o)
 TEST_OBJECTS+=$(OBJECTS)

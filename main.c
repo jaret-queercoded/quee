@@ -12,6 +12,7 @@
 #include "quee_scene.h"
 #include "quee_sprite.h"
 #include "quee_texture.h"
+#include "quee_script.h"
 
 SDL_Renderer* g_renderer;
 
@@ -28,9 +29,11 @@ int main(void) {
 
     quee_texture_manager *texture_manager = create_quee_texture_manager(1);
     quee_scene_manager *scene_manager = create_quee_scene_manager(10);
+    quee_script_manager *script_manager = create_quee_script_manager(10);
 
     check_quee_code(quee_scene_manager_insert(
         scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager)));
+    check_quee_code(add_quee_script(script_manager, "assets/scripts/hello.lua"));
     bool quit = false;
 
     uint32_t frame_start, frame_end, prev_frame_start;
@@ -38,6 +41,7 @@ int main(void) {
     float ms_elapsed;
     prev_frame_start = SDL_GetTicks();
     while(!quit) {
+        run_quee_scripts(script_manager, "helloWorld");
         frame_start = SDL_GetTicks();
         delta_ticks = frame_start - prev_frame_start;
         /*printf("delta_ticks: %d\n", delta_ticks);*/
@@ -82,6 +86,7 @@ int main(void) {
 
     destroy_quee_scene_manager(&scene_manager);
     destroy_quee_texture_manager(&texture_manager);
+    destroy_quee_script_manager(&script_manager);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(g_renderer);
 
