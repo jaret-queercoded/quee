@@ -27,7 +27,7 @@ int add_quee_script(quee_script_manager *manager, char *path) {
         return -1;
     }
     lua_pcall(manager->lua_state, 0, 0, 0);
-    manager->scripts[manager->curr_scripts] = malloc(sizeof(char) * strlen(path));
+    manager->scripts[manager->curr_scripts] = malloc(sizeof(char) * (strlen(path) + 1));
     strcpy(manager->scripts[manager->curr_scripts++], path);
     return 0;
 }
