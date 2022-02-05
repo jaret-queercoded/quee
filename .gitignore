@@ -10,3 +10,4 @@ external/
 *.exe
 *.obj
 .vscode/
+lua/
