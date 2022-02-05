@@ -18,7 +18,7 @@ struct quee_script {
 
 quee_script_manager * create_quee_script_manager(int max_scripts);
 quee_script * create_quee_script(quee_script_manager *manager, const char *path);
-int run_quee_script_function(quee_script_manager *manager, const char *function);
+int run_quee_script_function(quee_script_manager *manager, quee_script *script, const char *function);
 void destroy_quee_script_manager(quee_script_manager **manager);
 void destroy_quee_script(quee_script **script);
 
