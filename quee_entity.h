@@ -9,6 +9,10 @@
 
 typedef struct quee_entity quee_entity;
 
+//TODO switch to an parent child based entity system instead of
+//an array based system that we currently have I believe that 
+//this will make it much easier to traverse the entity for locating
+//other entities to use them in scripts and what not
 struct quee_entity {
     unsigned int id;
     unsigned int type:2;
