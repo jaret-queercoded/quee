@@ -4,7 +4,9 @@
 #include "lualib.h"
 #include "quee_helpers.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 
 quee_script_manager * create_quee_script_manager(int max_scripts) {
@@ -14,8 +16,23 @@ quee_script_manager * create_quee_script_manager(int max_scripts) {
     return manager;
 }
 
+// TODO there has to be a better way to do this because it is very error prone
+// and likely to flag a file that actually doesn't contain the function that 
+// we are looking for
+bool check_script_for_function(const char *path, const char *function) {
+    FILE *fp = fopen(path, "r");
+    char string[50];
+    while(fscanf(fp,"%s",string) == 1) {
+        if(strstr(string, function) != 0) {
+            fclose(fp);
+            return true;
+        }
+    }
+    fclose(fp);
+    return false;
+}
+
 quee_script * create_quee_script(quee_script_manager *manager, const char *path) {
-    printf("loading %s\n", path);
     if(path == NULL) {
         quee_set_error("Attempted to load a script with a null path");
         return NULL;
@@ -43,17 +60,23 @@ quee_script * create_quee_script(quee_script_manager *manager, const char *path)
     lua_pcall(manager->lua_state, 0, LUA_MULTRET, 0);
 
     quee_script *script = malloc(sizeof(quee_script));
+    script->lua_state = manager->lua_state;
     script->path = malloc(sizeof(char) * (strlen(path) + 1));
     strcpy(script->path, path);
+    script->type = 0;
+    //Check the script too see if it has any expected functions for later use
+    if(check_script_for_function(path, "onUpdate()")) {
+        script->type |= QUEE_ON_UDPATE_BIT; 
+    }
     return script;
 }
 
-int run_quee_script_function(quee_script_manager *manager, quee_script *script, const char *function) {
+int run_quee_script_function(quee_script *script, const char *function) {
     //Retrieve the tabel containing the functions of the chunk
-    lua_getfield(manager->lua_state, LUA_REGISTRYINDEX, script->path);
+    lua_getfield(script->lua_state, LUA_REGISTRYINDEX, script->path);
     //Get the function we want to call
-    lua_getfield(manager->lua_state, -1, function);
-    if(lua_pcall(manager->lua_state, 0, 0, 0)) {
+    lua_getfield(script->lua_state, -1, function);
+    if(lua_pcall(script->lua_state, 0, 0, 0)) {
         quee_set_error("Couldn't run lua function %s", function);
         return -1;
     }

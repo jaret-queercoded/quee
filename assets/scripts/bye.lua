@@ -1,5 +1,5 @@
 local x = 0
-function test()
+function onUpdate()
     x = x + 1
     print(x)
 end

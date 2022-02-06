@@ -41,8 +41,6 @@ int main(void) {
     float ms_elapsed;
     prev_frame_start = SDL_GetTicks();
     while(!quit) {
-        check_quee_code(run_quee_script_function(script_manager, scene_manager->scenes[0]->entities[0]->script, "test"));
-        check_quee_code(run_quee_script_function(script_manager, scene_manager->scenes[0]->entities[1]->script, "test"));
         frame_start = SDL_GetTicks();
         delta_ticks = frame_start - prev_frame_start;
         /*printf("delta_ticks: %d\n", delta_ticks);*/
