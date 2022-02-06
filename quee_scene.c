@@ -95,7 +95,7 @@ quee_scene* create_quee_scene() {
     scene->current_entities = 0;
     scene->max_entities = 0;
     strcpy(scene->name, "");
-    scene->render = NULL;
+    scene->render = false;
     scene->entities = NULL;
     return scene;
 }

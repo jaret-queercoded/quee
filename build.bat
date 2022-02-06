@@ -33,12 +33,31 @@ if not exist external\json-c-0.15 (
 	)
 	cd ..
 )
+if not exist external\lua-5.4.4 (
+	call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+	cd external
+	if not exist lua-5.4.4.tar.gz (
+		curl -LO https://www.lua.org/ftp/lua-5.4.4.tar.gz
+	)
+	tar -xzf lua-5.4.4.tar.gz lua-5.4.4
+	cd lua-5.4.4\src
+
+	cl /MD /O2 /c /DLUA_BUILD_AS_DLL *.c
+	ren lua.obj lua.o
+	ren luac.obj luac.o
+	link /DLL /IMPLIB:lua5.4.4.lib /OUT:lua5.4.4.dll *.obj
+	link /OUT:lua.exe lua.o lua5.4.4.lib
+	lib /OUT:lua5.4.4-static.lib *.obj
+	link /OUT:luac.exe luac.o lua5.4.4-static.lib
+	cd ..\..\..
+)
 echo %CD%
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 copy external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\*.dll .
 copy external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\*.dll .
 copy external\json-c-build\lib\json-c.dll .
+copy external\lua-5.4.4\src\*.dll .
 cl /Fequee.exe *.c^
-	external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\SDL2.lib external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\SDL2_image.lib external\json-c-build/Debug/json-c.lib^
-	/I external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\include /I external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include /I external\json-c-0.15/ /I external\json-c-build/
+	external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\SDL2.lib external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\SDL2_image.lib external\json-c-build/Debug/json-c.lib external\lua-5.4.4\src\lua5.4.4.lib^
+	/I external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\include /I external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include /I external\json-c-0.15/ /I external\json-c-build/ /I external\lua-5.4.4\src
