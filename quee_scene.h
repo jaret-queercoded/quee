@@ -19,6 +19,7 @@ struct quee_scene_manager {
     uint64_t max_capacity;
 };
 
+//TODO shift from a array base entity system to a parent child system
 struct quee_scene {
     char name[MAX_STR_LEN];
     bool render;
