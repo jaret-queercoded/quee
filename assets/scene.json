@@ -15,7 +15,7 @@
         {
             "type": 3,
             "name": "sprite2",
-            "script": "assets/scripts/bye.lua",
+            "script": "assets/scripts/hello.lua",
             "path": "assets/sad.png",
             "frames": [
                 [0,0,32,32,1000],
