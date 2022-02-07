@@ -100,6 +100,7 @@ quee_scene* create_quee_scene() {
     return scene;
 }
 
+//TODO need to make this function more robust so we can gracefully fail on malformed scenes
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager, quee_script_manager *script_manager) {
     FILE *fp;
     char buffer[1024];
