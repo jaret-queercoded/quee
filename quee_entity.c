@@ -17,6 +17,7 @@ static unsigned int NEXT_ID = 0;
 quee_entity * create_quee_entity() {
     quee_entity *entity = malloc(sizeof(quee_entity));
     entity->type = 0;
+    entity->name = NULL;
     entity->sprite = NULL;
     entity->script = NULL;
     entity->id = NEXT_ID++;

@@ -14,7 +14,7 @@
         },
         {
             "type": 3,
-            "name": "sprite1",
+            "name": "sprite2",
             "script": "assets/scripts/bye.lua",
             "path": "assets/sad.png",
             "frames": [

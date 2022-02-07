@@ -134,6 +134,11 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         entity_json = json_object_array_get_idx(entities_json, i);
         json_object_object_get_ex(entity_json, "type", &enetity_type_json);
         quee_entity *entity = create_quee_entity();
+        //Get the entity's name
+        json_object *name;
+        json_object_object_get_ex(entity_json, "name", &name);
+        entity->name = malloc(sizeof(char) * (strlen(json_object_get_string(name)) + 1));
+        strcpy(entity->name, json_object_get_string(name));
         int expected_type = json_object_get_int(enetity_type_json);
         //Check the type and load each part of the type
         //Loading sprite
@@ -168,7 +173,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
             json_object_object_get_ex(entity_json, "script", &script_path_json);
             const char *path = json_object_get_string(script_path_json);
             quee_script *script = 
-                check_quee_ptr(create_quee_script(script_manager, path));
+                check_quee_ptr(create_quee_script(script_manager, entity, path));
             check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
         }
         assert(entity->type == expected_type);

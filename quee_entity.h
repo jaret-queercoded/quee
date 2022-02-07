@@ -16,6 +16,7 @@ typedef struct quee_entity quee_entity;
 struct quee_entity {
     unsigned int id;
     unsigned int type:2;
+    char *name;
     quee_sprite *sprite; 
     quee_script *script;
     quee_rect pos;

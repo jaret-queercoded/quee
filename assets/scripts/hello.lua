@@ -1,3 +1,3 @@
 function onUpdate()
-    print('hello from lua')
+    quee_script_get_pos("hello jaret")
 end

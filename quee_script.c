@@ -3,16 +3,21 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "quee_helpers.h"
+#include "quee_script_functions.h"
+#include "quee_entity.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 
+
 quee_script_manager * create_quee_script_manager(int max_scripts) {
     quee_script_manager *manager = malloc(sizeof(quee_script_manager));
     manager->lua_state = luaL_newstate();
     luaL_openlibs(manager->lua_state);
+    lua_pushcfunction(manager->lua_state, quee_script_get_pos);
+    lua_setglobal(manager->lua_state, "quee_script_get_pos");
     return manager;
 }
 
@@ -32,7 +37,7 @@ bool check_script_for_function(const char *path, const char *function) {
     return false;
 }
 
-quee_script * create_quee_script(quee_script_manager *manager, const char *path) {
+quee_script * create_quee_script(quee_script_manager *manager, quee_entity *entity, const char *path) {
     if(path == NULL) {
         quee_set_error("Attempted to load a script with a null path");
         return NULL;
@@ -82,6 +87,7 @@ int run_quee_script_function(quee_script *script, const char *function) {
     }
     return 0;
 }
+
 
 void destroy_quee_script_manager(quee_script_manager **manager) {
     lua_close((*manager)->lua_state);
