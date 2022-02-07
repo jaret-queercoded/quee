@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 
-inline void * check_lua_ptr_func(void *ptr, char *func)
+void * check_lua_ptr_func(void *ptr, const char *func)
 {
     if(ptr == NULL) {
         fprintf(stderr, "quee got a null ptr from lua in %s\nPress Enter to continue...\n", func);
@@ -21,7 +21,8 @@ inline void * check_lua_ptr_func(void *ptr, char *func)
 
 int quee_script_get_pos(lua_State *L) {
     quee_entity *test = check_lua_ptr(lua_touserdata(L, 1));
-    printf("%p\n", test);
+    printf("%p\n", (void *)test);
     printf("%s\n", test->name);
     return 0;
 }
+

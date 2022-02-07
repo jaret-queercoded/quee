@@ -2,6 +2,7 @@
 
 #include "../quee_scene.h"
 #include "../quee_texture.h"
+#include "../quee_script.h"
 #include "quee_test_helper.h"
 
 #include <assert.h>
@@ -85,7 +86,7 @@ quee_test_result test_quee_scene_creation() {
 
 quee_test_result test_quee_load_scene() {
     quee_texture_manager *texture_manager = create_quee_texture_manager(10);
-    quee_script_manager *script_manager = create_quee_script_manager();
+    quee_script_manager *script_manager = create_quee_script_manager(10);
     quee_scene *scene = load_quee_scene("assets/test/testscene.json", NULL, texture_manager, script_manager);
     QUEE_ASSERT(scene != NULL, "Couldn't get a scene");
     QUEE_ASSERT(strcmp(scene->name, "test_scene1") == 0, "Name wasn't what was expected");
