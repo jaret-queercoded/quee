@@ -10,14 +10,14 @@
 void render_entity(quee_entity *entity, SDL_Renderer *renderer) {
     if(entity->type & QUEE_SPRITE_BIT){
         quee_sprite *sprite = entity->sprite; 
-        SDL_Rect src_rect = {.x = sprite->curr_frame->rect.x,
-                             .y = sprite->curr_frame->rect.y,
-                             .w = sprite->curr_frame->rect.w,
-                             .h = sprite->curr_frame->rect.h};
+        SDL_Rect src_rect = {.x = sprite->curr_frame->pos.x,
+                             .y = sprite->curr_frame->pos.y,
+                             .w = sprite->curr_frame->size.x,
+                             .h = sprite->curr_frame->size.y};
         SDL_Rect dst_rect = {.x = entity->pos.x,
                              .y = entity->pos.y,
-                             .w = sprite->curr_frame->rect.w,
-                             .h = sprite->curr_frame->rect.h};
+                             .w = sprite->curr_frame->size.x,
+                             .h = sprite->curr_frame->size.y};
         SDL_Texture *texture = entity->sprite->texture->texture;
         SDL_RenderCopy(renderer, texture, &src_rect, &dst_rect);
     }

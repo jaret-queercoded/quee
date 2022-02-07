@@ -19,7 +19,8 @@ struct quee_entity {
     char *name;
     quee_sprite *sprite; 
     quee_script *script;
-    quee_rect pos;
+    quee_vec2f pos;
+    quee_vec2i size;
 };
 
 quee_entity * create_quee_entity();

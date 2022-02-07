@@ -30,7 +30,7 @@ int main(void) {
 
     quee_texture_manager *texture_manager = create_quee_texture_manager(1);
     quee_scene_manager *scene_manager = create_quee_scene_manager(10);
-    quee_script_manager *script_manager = create_quee_script_manager(10);
+    quee_script_manager *script_manager = create_quee_script_manager();
 
     check_quee_code(quee_scene_manager_insert(
         scene_manager, load_quee_scene("assets/scene.json", g_renderer, texture_manager, script_manager)));

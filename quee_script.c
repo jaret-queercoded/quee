@@ -12,12 +12,14 @@
 #include <string.h>
 
 
-quee_script_manager * create_quee_script_manager(int max_scripts) {
+quee_script_manager * create_quee_script_manager() {
     quee_script_manager *manager = malloc(sizeof(quee_script_manager));
     manager->lua_state = luaL_newstate();
     luaL_openlibs(manager->lua_state);
     lua_pushcfunction(manager->lua_state, quee_script_get_pos);
     lua_setglobal(manager->lua_state, "quee_script_get_pos");
+    lua_pushcfunction(manager->lua_state, quee_script_set_pos);
+    lua_setglobal(manager->lua_state, "quee_script_set_pos");
     return manager;
 }
 
@@ -71,6 +73,10 @@ quee_script * create_quee_script(quee_script_manager *manager, const char *path)
     strcpy(script->path, path);
     script->type = 0;
     //Check the script too see if it has any expected functions for later use
+    if(check_script_for_function(path, "onCreate(entity)")) {
+        printf("Setting on create bit\n");
+        script->type |= QUEE_ON_CREATE_BIT; 
+    }
     if(check_script_for_function(path, "onUpdate(entity)")) {
         script->type |= QUEE_ON_UDPATE_BIT; 
     }
@@ -78,14 +84,14 @@ quee_script * create_quee_script(quee_script_manager *manager, const char *path)
 }
 
 int run_quee_script_function(quee_script *script, const char *function) {
-    fprintf(stderr, "Calling function %s\n", function);
     //Retrieve the tabel containing the functions of the chunk
     lua_getfield(script->lua_state, LUA_REGISTRYINDEX, script->path);
     //Get the function we want to call
     lua_getfield(script->lua_state, -1, function);
+    printf("ptr: %p\n", script->entity);
     lua_pushlightuserdata(script->lua_state, script->entity);
     if(lua_pcall(script->lua_state, 1, 0, 0) != LUA_OK) {
-        quee_set_error("Couldn't run lua function %s\nError: %s\n", function, lua_tostring(script->lua_state, -1));
+        quee_set_error("Couldn't run lua function %s:%s\nError: %s\n", script->path, function, lua_tostring(script->lua_state, -1));
         return -1;
     }
     return 0;
@@ -95,10 +101,10 @@ int run_quee_script_function(quee_script *script, const char *function) {
 void destroy_quee_script_manager(quee_script_manager **manager) {
     lua_close((*manager)->lua_state);
     free(*manager);
-    manager = NULL;
+    *manager = NULL;
 }
 
 void destroy_quee_script(quee_script **script) {
     free((*script)->path);
-    script = NULL;
+    *script = NULL;
 }
