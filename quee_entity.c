@@ -20,6 +20,10 @@ quee_entity * create_quee_entity() {
     entity->name = NULL;
     entity->sprite = NULL;
     entity->script = NULL;
+    entity->pos.x = 0.0;
+    entity->pos.y = 0.0;
+    entity->size.x = 0;
+    entity->size.y = 0;
     entity->id = NEXT_ID++;
     return entity;
 }

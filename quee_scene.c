@@ -140,6 +140,12 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         json_object_object_get_ex(entity_json, "name", &name);
         entity->name = malloc(sizeof(char) * (strlen(json_object_get_string(name)) + 1));
         strcpy(entity->name, json_object_get_string(name));
+        json_object *pos_json;
+        json_object_object_get_ex(entity_json, "pos", pos_json);
+        int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
+        int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
+        entity->pos.x = pos_x;
+        entity->pos.y = pos_y;
         int expected_type = json_object_get_int(enetity_type_json);
         //Check the type and load each part of the type
         //Loading sprite
@@ -163,7 +169,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
                 int w = json_object_get_int(json_object_array_get_idx(frame_info_json, 2));
                 int h = json_object_get_int(json_object_array_get_idx(frame_info_json, 3));
                 int ticks = json_object_get_int(json_object_array_get_idx(frame_info_json, 4));
-                quee_frame frame = { .rect = { .x = x, .y = y, .w = w, .h = h }, .ticks = ticks };
+                quee_frame frame = { .pos = { .x = x, .y = y}, .size = { .x = w, .y =h }, .ticks = ticks };
                 quee_sprite_add_frame(sprite, frame);
             }
             check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, sprite));
@@ -178,10 +184,12 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
             //Save the entity later so that I can pass the pointer to lua
             script->entity = entity;
             check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
+            if(entity->script->type & QUEE_ON_CREATE_BIT) {
+                printf("Trying to run on create\n");
+                check_quee_code(run_quee_script_function(entity->script, "onCreate"));
+            }
         }
         assert(entity->type == expected_type);
-        quee_rect pos = {.x = 100, .y = 100, .w = 32, .h = 32};
-        entity->pos = pos;
         scene->entities[i] = entity; 
     }
     return scene;

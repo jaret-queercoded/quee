@@ -18,7 +18,8 @@ struct quee_sprite {
 };
 
 struct quee_frame {
-    quee_rect rect;
+    quee_vec2i pos;
+    quee_vec2i size;
     uint16_t ticks;
 };
 

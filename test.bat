@@ -24,7 +24,9 @@ if not exist external\json-c-0.15 (
 	)
 	tar -xzf json-c-0.15.tar.gz json-c-0.15
 	if not exist json-c-build (
-		call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+		if not defined DevEnvDir (
+			call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+		)
 		mkdir json-c-build
 		cd json-c-build
 		cmake ../json-c-0.15
@@ -34,7 +36,9 @@ if not exist external\json-c-0.15 (
 	cd ..
 )
 if not exist external\lua-5.4.4 (
-	call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+	if not defined DevEnvDir (
+		call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+	)
 	cd external
 	if not exist lua-5.4.4.tar.gz (
 		curl -LO https://www.lua.org/ftp/lua-5.4.4.tar.gz
@@ -52,7 +56,9 @@ if not exist external\lua-5.4.4 (
 	cd ..\..\..
 )
 echo %CD%
-call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+if not defined DevEnvDir (
+	call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
+)
 
 copy external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\*.dll .
 copy external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\*.dll .
@@ -61,3 +67,5 @@ cl /Fequee_test.exe test\*.c quee_*.c^
 	external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\lib\x64\SDL2.lib external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\lib\x64\SDL2_image.lib ^
 	external\json-c-build/Debug/json-c.lib external\lua-5.4.4\src\lua5.4.4.lib^
 	/I external\SDL2-devel-2.0.20-VC\SDL2-2.0.20\include /I external\SDL2_image-devel-2.0.5-VC\SDL2_image-2.0.5\include /I external\json-c-0.15 /I external\json-c-build /I external\lua-5.4.4\src
+
+.\quee_test.exe
