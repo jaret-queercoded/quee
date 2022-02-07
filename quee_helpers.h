@@ -11,15 +11,6 @@
 
 #define MAX_STR_LEN 256
 
-typedef struct Pixel Pixel;
-
-struct Pixel {
-    uint8_t B;
-    uint8_t G;
-    uint8_t R;
-    uint8_t A;
-};
-
 void check_sdl_code(int code);
 void* check_sdl_ptr(void *ptr);
 
