@@ -37,13 +37,13 @@ bool check_script_for_function(const char *path, const char *function) {
     return false;
 }
 
-quee_script * create_quee_script(quee_script_manager *manager, quee_entity *entity, const char *path) {
+quee_script * create_quee_script(quee_script_manager *manager, const char *path) {
     if(path == NULL) {
         quee_set_error("Attempted to load a script with a null path");
         return NULL;
     }
     if(luaL_loadfile(manager->lua_state, path)) {
-        quee_set_error("Couldn't load lua script %s", path);
+        quee_set_error("Couldn't load lua script %s: %s", path, lua_tostring(manager->lua_state, -1));
         return NULL;
     }
     //Create _ENV tables
@@ -66,23 +66,26 @@ quee_script * create_quee_script(quee_script_manager *manager, quee_entity *enti
 
     quee_script *script = malloc(sizeof(quee_script));
     script->lua_state = manager->lua_state;
+    script->entity = NULL;
     script->path = malloc(sizeof(char) * (strlen(path) + 1));
     strcpy(script->path, path);
     script->type = 0;
     //Check the script too see if it has any expected functions for later use
-    if(check_script_for_function(path, "onUpdate()")) {
+    if(check_script_for_function(path, "onUpdate(entity)")) {
         script->type |= QUEE_ON_UDPATE_BIT; 
     }
     return script;
 }
 
 int run_quee_script_function(quee_script *script, const char *function) {
+    fprintf(stderr, "Calling function %s\n", function);
     //Retrieve the tabel containing the functions of the chunk
     lua_getfield(script->lua_state, LUA_REGISTRYINDEX, script->path);
     //Get the function we want to call
     lua_getfield(script->lua_state, -1, function);
-    if(lua_pcall(script->lua_state, 0, 0, 0)) {
-        quee_set_error("Couldn't run lua function %s", function);
+    lua_pushlightuserdata(script->lua_state, script->entity);
+    if(lua_pcall(script->lua_state, 1, 0, 0) != LUA_OK) {
+        quee_set_error("Couldn't run lua function %s\nError: %s\n", function, lua_tostring(script->lua_state, -1));
         return -1;
     }
     return 0;

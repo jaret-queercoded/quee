@@ -39,6 +39,8 @@ char* quee_get_error() {
 void check_quee_code(int code) {
     if(code < 0) {
         fprintf(stderr, "Quee encountered an error: %s\n", quee_get_error());
+        fprintf(stderr, "Press enter to continue...\n");
+        getchar();
         exit(EXIT_FAILURE);
     }
 }
@@ -46,6 +48,8 @@ void check_quee_code(int code) {
 void* check_quee_ptr(void *ptr) {
     if(ptr == NULL) {
         fprintf(stderr, "Quee returned a null ptr: %s\n", quee_get_error());
+        fprintf(stderr, "Press enter to continue...\n");
+        getchar();
         exit(EXIT_FAILURE);
     }
     return ptr;

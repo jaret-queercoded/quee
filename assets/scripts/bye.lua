@@ -1,5 +1,5 @@
 local x = 0
-function onUpdate()
+function onUpdate(entity)
     x = x + 1
-    print(x)
+    quee_script_get_pos(entity)
 end

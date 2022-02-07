@@ -72,7 +72,7 @@ int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr) {
 void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
     if(entity->type & QUEE_SCRIPT_BIT) {
         if(entity->script->type & QUEE_ON_UDPATE_BIT) {
-            run_quee_script_function(entity->script, "onUpdate");
+            check_quee_code(run_quee_script_function(entity->script, "onUpdate"));
         }
     }
     if(entity->type & QUEE_SPRITE_BIT) {

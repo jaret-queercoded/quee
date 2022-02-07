@@ -1,3 +1,3 @@
-function onUpdate()
-    quee_script_get_pos("hello jaret")
+function onUpdate(entity)
+    quee_script_get_pos(entity)
 end
