@@ -14,8 +14,7 @@ _G.player = Player:create(100, 0.0, 0.0)
 -- quee functions
 function onCreate(entity)
     print('onCreate')
-    x, y = quee_script_get_pos(entity)
-    print(x .. y)
+    player.x, player.y = quee_script_get_pos(entity)
 end
 
 function onUpdate(entity)

@@ -88,7 +88,6 @@ int run_quee_script_function(quee_script *script, const char *function) {
     lua_getfield(script->lua_state, LUA_REGISTRYINDEX, script->path);
     //Get the function we want to call
     lua_getfield(script->lua_state, -1, function);
-    printf("ptr: %p\n", script->entity);
     lua_pushlightuserdata(script->lua_state, script->entity);
     if(lua_pcall(script->lua_state, 1, 0, 0) != LUA_OK) {
         quee_set_error("Couldn't run lua function %s:%s\nError: %s\n", script->path, function, lua_tostring(script->lua_state, -1));

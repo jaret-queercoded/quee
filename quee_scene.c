@@ -141,7 +141,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         entity->name = malloc(sizeof(char) * (strlen(json_object_get_string(name)) + 1));
         strcpy(entity->name, json_object_get_string(name));
         json_object *pos_json;
-        json_object_object_get_ex(entity_json, "pos", pos_json);
+        json_object_object_get_ex(entity_json, "pos", &pos_json);
         int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
         int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
         entity->pos.x = pos_x;

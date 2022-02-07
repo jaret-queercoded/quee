@@ -21,7 +21,6 @@ void * check_lua_ptr_func(void *ptr, const char *func)
 
 int quee_script_get_pos(lua_State *L) {
     quee_entity *entity = check_lua_ptr(lua_touserdata(L, 1));
-    printf("Trying to get pos %f %f", entity->pos.x, entity->pos.y);
     lua_pushnumber(L, entity->pos.x);
     lua_pushnumber(L, entity->pos.y);
     return 2;
@@ -45,3 +44,4 @@ int quee_script_set_pos(lua_State *L) {
     entity->pos.y = y;
     return 0;
 }
+
