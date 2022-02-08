@@ -180,9 +180,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
             json_object_object_get_ex(entity_json, "script", &script_path_json);
             const char *path = json_object_get_string(script_path_json);
             quee_script *script = 
-                check_quee_ptr(create_quee_script(script_manager, path));
-            //Save the entity later so that I can pass the pointer to lua
-            script->entity = entity;
+                check_quee_ptr(create_quee_script(script_manager, path, entity));
             check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
             if(entity->script->type & QUEE_ON_CREATE_BIT) {
                 printf("Trying to run on create\n");

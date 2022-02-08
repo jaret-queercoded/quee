@@ -25,7 +25,6 @@ lua:
 	@mkdir lua
 	@cp lua-*/src/{lua,luaconf,lauxlib,lualib}.h lua
 	@cp lua-*/src/liblua.a lua
-	@rm -rf lua-5.4.4/
 	@rm lua*.tar.gz
 
 $(EXEC_FILE): $(OBJECTS) $(MAIN_OBJECT) 

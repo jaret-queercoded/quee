@@ -18,12 +18,11 @@ struct quee_script_manager {
 struct quee_script {
     lua_State *lua_state;
     quee_entity *entity;
-    char *path;
     uint32_t type:2;
 };
 
 quee_script_manager * create_quee_script_manager();
-quee_script * create_quee_script(quee_script_manager *manager, const char *path);
+quee_script * create_quee_script(quee_script_manager *manager, const char *path, quee_entity *entity);
 int run_quee_script_function(quee_script *script, const char *function);
 void destroy_quee_script_manager(quee_script_manager **manager);
 void destroy_quee_script(quee_script **script);

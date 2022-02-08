@@ -12,6 +12,28 @@
                 [0,0,32,32,1000],
                 [32,0,32,32,500]
             ] 
+        },
+        {
+            "type": 3,
+            "name": "enemy1",
+            "pos": [10,10],
+            "script": "assets/scripts/enemy.lua",
+            "path": "assets/sad.png",
+            "frames": [
+                [0,0,32,32,1000],
+                [32,0,32,32,500]
+            ] 
+        },
+        {
+            "type": 3,
+            "name": "enemy2",
+            "pos": [110,10],
+            "script": "assets/scripts/enemy.lua",
+            "path": "assets/sad.png",
+            "frames": [
+                [0,0,32,32,1000],
+                [32,0,32,32,500]
+            ] 
         }
     ]
 }
