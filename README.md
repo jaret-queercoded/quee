@@ -1,5 +1,5 @@
 # quee
-quee is a work in progress game engine using SDL2
+quee is a work in progress game engine using SDL2 and Lua
 
 ## Building
 ### Linux
