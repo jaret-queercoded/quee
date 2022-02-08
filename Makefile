@@ -23,6 +23,7 @@ lua:
 	@tar zxf lua-5.4.4.tar.gz
 	cd lua-5.4.4 && make all test
 	@mkdir lua
+	ls
 	@cp lua-*/src/{lua,luaconf,lauxlib,lualib}.h lua
 	@cp lua-*/src/liblua.a lua
 	@rm lua*.tar.gz
