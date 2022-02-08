@@ -23,10 +23,9 @@ lua:
 	@tar zxf lua-5.4.4.tar.gz
 	cd lua-5.4.4 && make all test
 	@mkdir lua
-	ls
-	@cp lua-*/src/{lua,luaconf,lauxlib,lualib}.h lua
-	@cp lua-*/src/liblua.a lua
-	@rm lua*.tar.gz
+	@cp lua-5.4.4/src/{lua,luaconf,lauxlib,lualib}.h lua
+	@cp lua-5.4.4/src/liblua.a lua
+	@rm lua-5.4.4.tar.gz
 
 $(EXEC_FILE): $(OBJECTS) $(MAIN_OBJECT) 
 	$(CC) $^ $(LIBS) -o $@
