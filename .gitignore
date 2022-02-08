@@ -10,3 +10,5 @@ external/
 *.exe
 *.obj
 .vscode/
+lua/
+lua-5.4.4/

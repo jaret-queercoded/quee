@@ -1,13 +1,16 @@
-#ifndef QUEE_RECT_H_
-#define QUEE_RECT_H_
+#ifndef quee_vec2f_H_
+#define quee_vec2f_H_
 
 #include <stdint.h>
 
-typedef struct quee_rect quee_rect;
+typedef struct quee_vec2f quee_vec2f;
+typedef struct quee_vec2i quee_vec2i;
 
-struct quee_rect {
-    uint32_t x, y, w, h;
+struct quee_vec2f {
+    double x, y;
 };
-
+struct quee_vec2i {
+    int64_t x, y;
+};
 #endif
 

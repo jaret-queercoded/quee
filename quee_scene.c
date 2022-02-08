@@ -1,6 +1,7 @@
 #include "quee_scene.h"
 #include "quee_helpers.h"
 #include "quee_entity.h"
+#include "quee_script.h"
 #include "quee_texture.h"
 #include "quee_sprite.h"
 
@@ -91,15 +92,18 @@ void destroy_quee_scene_manager(quee_scene_manager **manager) {
 
 quee_scene* create_quee_scene() {
     quee_scene* scene = malloc(sizeof(quee_scene));
+    scene->delta_time = 0;
     scene->current_entities = 0;
     scene->max_entities = 0;
+    //TODO set the scene name
     strcpy(scene->name, "");
-    scene->render = NULL;
+    scene->render = false;
     scene->entities = NULL;
     return scene;
 }
 
-quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager) {
+//TODO need to make this function more robust so we can gracefully fail on malformed scenes
+quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager, quee_script_manager *script_manager) {
     FILE *fp;
     char buffer[1024];
     json_object *parsed_json;
@@ -132,15 +136,29 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
     for(size_t i = 0; i < scene->current_entities; i++) {
         entity_json = json_object_array_get_idx(entities_json, i);
         json_object_object_get_ex(entity_json, "type", &enetity_type_json);
-        quee_entity *entity = create_quee_entity();
+        quee_entity *entity = create_quee_entity(scene);
+        //Get the entity's name
+        json_object *name;
+        json_object_object_get_ex(entity_json, "name", &name);
+        entity->name = malloc(sizeof(char) * (strlen(json_object_get_string(name)) + 1));
+        strcpy(entity->name, json_object_get_string(name));
+        json_object *pos_json;
+        json_object_object_get_ex(entity_json, "pos", &pos_json);
+        if(pos_json) {
+            int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
+            int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
+            entity->pos.x = pos_x;
+            entity->pos.y = pos_y;
+        }
         int expected_type = json_object_get_int(enetity_type_json);
         //Check the type and load each part of the type
+        //Loading sprite
         if(expected_type & QUEE_SPRITE_BIT) {
             // Get the path to the texture
             json_object *sprite_path_json;
             json_object_object_get_ex(entity_json, "path", &sprite_path_json);
             quee_texture *texture = 
-                quee_texture_manager_get(texture_manager, json_object_get_string(sprite_path_json));
+                check_quee_ptr(quee_texture_manager_get(texture_manager, json_object_get_string(sprite_path_json)));
             quee_sprite *sprite = create_quee_sprite(texture);
             // Load the frame information
             json_object *frame_array_json;
@@ -155,14 +173,25 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
                 int w = json_object_get_int(json_object_array_get_idx(frame_info_json, 2));
                 int h = json_object_get_int(json_object_array_get_idx(frame_info_json, 3));
                 int ticks = json_object_get_int(json_object_array_get_idx(frame_info_json, 4));
-                quee_frame frame = { .rect = { .x = x, .y = y, .w = w, .h = h }, .ticks = ticks };
+                quee_frame frame = { .pos = { .x = x, .y = y}, .size = { .x = w, .y =h }, .ticks = ticks };
                 quee_sprite_add_frame(sprite, frame);
             }
             check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, sprite));
         }
+        //Loading script
+        if(expected_type & QUEE_SCRIPT_BIT) {
+            json_object *script_path_json;
+            json_object_object_get_ex(entity_json, "script", &script_path_json);
+            const char *path = json_object_get_string(script_path_json);
+            quee_script *script = 
+                check_quee_ptr(create_quee_script(script_manager, path, entity));
+            check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
+        }
         assert(entity->type == expected_type);
-        quee_rect pos = {.x = 100, .y = 100, .w = 32, .h = 32};
-        entity->pos = pos;
+        // We should now have everything that we need to run the onCreate event if we need too
+        if(entity->type & QUEE_SCRIPT_BIT && entity->script->type & QUEE_ON_CREATE_BIT) {
+            check_quee_code(run_quee_script_function(entity->script, "onCreate"));
+        }
         scene->entities[i] = entity; 
     }
     return scene;
@@ -194,6 +223,10 @@ int quee_scene_add_entity(quee_scene *scene, quee_entity *entity) {
 }
 
 void update_quee_scene(quee_scene *scene, unsigned int delta_ticks) {
+    //If something happens and we get a delta time of zero we don't want to update anything
+    if(delta_ticks == 0) return;
+    //Convert ticks into milliseconds
+    scene->delta_time = delta_ticks / 1000.0f;
     for(int i = 0; i < scene->current_entities; i++) {
         update_quee_entity(scene->entities[i], delta_ticks);
     }

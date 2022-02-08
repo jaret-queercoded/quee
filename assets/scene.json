@@ -3,8 +3,31 @@
     "render" : true,
     "entities": [
         {
-            "type": 1,
+            "type": 3,
             "name": "sprite1",
+            "pos": [100,100],
+            "script": "assets/scripts/player.lua",
+            "path": "assets/sad.png",
+            "frames": [
+                [0,0,32,32,1000],
+                [32,0,32,32,500]
+            ] 
+        },
+        {
+            "type": 3,
+            "name": "enemy1",
+            "pos": [10,10],
+            "script": "assets/scripts/enemy.lua",
+            "path": "assets/sad.png",
+            "frames": [
+                [0,0,32,32,1000],
+                [32,0,32,32,500]
+            ] 
+        },
+        {
+            "type": 1,
+            "name": "enemy2",
+            "pos": [110,10],
             "path": "assets/sad.png",
             "frames": [
                 [0,0,32,32,1000],

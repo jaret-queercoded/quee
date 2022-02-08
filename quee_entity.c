@@ -4,6 +4,7 @@
 
 #include "quee_helpers.h"
 #include "quee_sprite.h"
+#include "quee_script.h"
 
 //TODO Figure out a better way to ids
 static unsigned int NEXT_ID = 0;
@@ -13,10 +14,17 @@ static unsigned int NEXT_ID = 0;
  *
  * @return An empty entity that you then add compnents to 
  */
-quee_entity * create_quee_entity() {
+quee_entity* create_quee_entity(quee_scene *scene) {
     quee_entity *entity = malloc(sizeof(quee_entity));
     entity->type = 0;
+    entity->scene = scene;
+    entity->name = NULL;
     entity->sprite = NULL;
+    entity->script = NULL;
+    entity->pos.x = 0.0;
+    entity->pos.y = 0.0;
+    entity->size.x = 0;
+    entity->size.y = 0;
     entity->id = NEXT_ID++;
     return entity;
 }
@@ -29,6 +37,9 @@ quee_entity * create_quee_entity() {
 void destroy_quee_entity(quee_entity **entity) {
     if((*entity)->type & QUEE_SPRITE_BIT) {
         destroy_quee_sprite(&(*entity)->sprite);
+    }
+    if((*entity)->type & QUEE_SCRIPT_BIT) {
+        destroy_quee_script(&(*entity)->script);
     }
     free(*entity);
     entity = NULL;
@@ -52,6 +63,9 @@ int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr) {
         case QUEE_SPRITE_BIT:
             entity->sprite = ptr;
             break;
+        case QUEE_SCRIPT_BIT:
+            entity->script = ptr;
+            break;
         default:
             quee_set_error("quee_entity doesn't support that type: 0x%04x", type);
             return -1;
@@ -61,6 +75,11 @@ int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr) {
 }
 
 void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
+    if(entity->type & QUEE_SCRIPT_BIT) {
+        if(entity->script->type & QUEE_ON_UDPATE_BIT) {
+            check_quee_code(run_quee_script_function(entity->script, "onUpdate"));
+        }
+    }
     if(entity->type & QUEE_SPRITE_BIT) {
         update_quee_sprite(entity->sprite, delta_ticks);
     }

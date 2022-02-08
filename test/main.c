@@ -9,6 +9,7 @@
 #include "quee_scene_test.h"
 #include "quee_texture_test.h"
 #include "quee_sprite_test.h"
+#include "quee_script_test.h"
 
 #include "../quee_helpers.h"
 
@@ -32,6 +33,9 @@ quee_test tests[] = {
     {.func_ptr = test_quee_sprite_creation, .suite = QUEE_SPRITE_SUITE},
     {.func_ptr = test_quee_sprite_add_frame, .suite = QUEE_SPRITE_SUITE},
     {.func_ptr = test_quee_sprite_update, .suite = QUEE_SPRITE_SUITE},
+    {.func_ptr = test_quee_script_creation, .suite = QUEE_SCRIPT_SUITE},
+    {.func_ptr = test_quee_script_function_type, .suite = QUEE_SCRIPT_SUITE},
+    {.func_ptr = test_quee_script_run_function, .suite = QUEE_SCRIPT_SUITE},
 };
 
 //We use a global render pointer in c so I just make a null one here for tests
@@ -62,7 +66,7 @@ int main(int argc, char** argv) {
                 printf("%s PASSED!\n", test_result.name);
             }
             else {
-                printf("%s FAILED!", test_result.name);
+                printf("%s FAILED!\n", test_result.name);
                 failures[num_failures++] = test_result;
             }
         }
@@ -87,7 +91,7 @@ int main(int argc, char** argv) {
                 printf("%s PASSED!\n", test_result.name);
             }
             else {
-                printf("%s FAILED!", test_result.name);
+                printf("%s FAILED!\n", test_result.name);
                 failures[num_failures++] = test_result;
             }
         }
