@@ -3,6 +3,8 @@
 #include "../quee_entity.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define TEST_SCRIPT_PATH "assets/test/scripts/test.lua"
 
@@ -12,6 +14,8 @@ quee_test_result test_quee_script_creation() {
     QUEE_ASSERT(manager->L, "We should have a lua state after creation");
     quee_scene *scene = create_quee_scene();
     quee_entity *entity = create_quee_entity(scene);
+    entity->name = malloc(sizeof(char) * 5);
+    strcpy(entity->name, "test");
     quee_script *script = create_quee_script(manager, TEST_SCRIPT_PATH, entity);
     QUEE_ASSERT(script, "We should have a script now");
     QUEE_ASSERT(script->L == manager->L, "Script and manager should have the same lua state");
@@ -29,8 +33,10 @@ quee_test_result test_quee_script_function_type() {
     quee_script_manager *manager = create_quee_script_manager();
     quee_scene *scene = create_quee_scene();
     quee_entity *entity = create_quee_entity(scene);
+    entity->name = malloc(sizeof(char) * 5);
+    strcpy(entity->name, "test");
     quee_script *script = create_quee_script(manager, TEST_SCRIPT_PATH, entity);
-    QUEE_ASSERT(script->type == 1, "We should have a type mask of 1!");
+    QUEE_ASSERT(script->type == 2, "We should have a type mask of 2 for onUpdate!");
     destroy_quee_script(&script);
     destroy_quee_script_manager(&manager);
     destroy_quee_scene(&scene);
@@ -42,6 +48,8 @@ quee_test_result test_quee_script_run_function() {
     quee_script_manager *manager = create_quee_script_manager();
     quee_scene *scene = create_quee_scene();
     quee_entity *entity = create_quee_entity(scene);
+    entity->name = malloc(sizeof(char) * 5);
+    strcpy(entity->name, "test");
     quee_script *script = create_quee_script(manager, TEST_SCRIPT_PATH, entity);
     int result = run_quee_script_function(script, "onUpdate");
     QUEE_ASSERT(result == 0, "We didn't run the script correctly!");

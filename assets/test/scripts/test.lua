@@ -1,2 +1,4 @@
-function onUpdate(entity)
+test = {}
+function test.onUpdate(entity)
 end
+return test

@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
                 printf("%s PASSED!\n", test_result.name);
             }
             else {
-                printf("%s FAILED!", test_result.name);
+                printf("%s FAILED!\n", test_result.name);
                 failures[num_failures++] = test_result;
             }
         }
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
                 printf("%s PASSED!\n", test_result.name);
             }
             else {
-                printf("%s FAILED!", test_result.name);
+                printf("%s FAILED!\n", test_result.name);
                 failures[num_failures++] = test_result;
             }
         }

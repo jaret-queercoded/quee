@@ -144,10 +144,12 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         strcpy(entity->name, json_object_get_string(name));
         json_object *pos_json;
         json_object_object_get_ex(entity_json, "pos", &pos_json);
-        int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
-        int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
-        entity->pos.x = pos_x;
-        entity->pos.y = pos_y;
+        if(pos_json) {
+            int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
+            int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
+            entity->pos.x = pos_x;
+            entity->pos.y = pos_y;
+        }
         int expected_type = json_object_get_int(enetity_type_json);
         //Check the type and load each part of the type
         //Loading sprite
