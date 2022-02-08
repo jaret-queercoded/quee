@@ -187,7 +187,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         }
         assert(entity->type == expected_type);
         // We should now have everything that we need to run the onCreate event if we need too
-        if(entity->script->type & QUEE_ON_CREATE_BIT) {
+        if(entity->type & QUEE_SCRIPT_BIT && entity->script->type & QUEE_ON_CREATE_BIT) {
             check_quee_code(run_quee_script_function(entity->script, "onCreate"));
         }
         scene->entities[i] = entity; 

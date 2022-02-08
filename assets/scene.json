@@ -25,10 +25,9 @@
             ] 
         },
         {
-            "type": 3,
+            "type": 1,
             "name": "enemy2",
             "pos": [110,10],
-            "script": "assets/scripts/enemy.lua",
             "path": "assets/sad.png",
             "frames": [
                 [0,0,32,32,1000],

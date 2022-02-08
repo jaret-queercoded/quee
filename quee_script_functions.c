@@ -55,3 +55,4 @@ int quee_script_get_delta_time(lua_State *L) {
     lua_pushnumber(L, entity->scene->delta_time);
     return 1;
 }
+

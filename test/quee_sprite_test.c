@@ -27,9 +27,9 @@ quee_test_result test_quee_sprite_add_frame() {
     quee_sprite_init_frames(sprite, 2);
     QUEE_ASSERT(sprite->max_frames == 2, "Should have a max of two frames now!");
     QUEE_ASSERT(sprite->frame_index == 0, "Should have a frame index of 0");
-    quee_frame frame1 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 100};
-    quee_frame frame2 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 1000};
-    quee_frame frame3 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 10000};
+    quee_frame frame1 = {.pos = {.x = 0, .y = 0}, .size = {.x = 32, .y = 32}, .ticks = 100};
+    quee_frame frame2 = {.pos = {.x = 0, .y = 0}, .size = {.x = 32, .y = 32}, .ticks = 1000};
+    quee_frame frame3 = {.pos = {.x = 0, .y = 0}, .size = {.x = 32, .y = 32}, .ticks = 10000};
     QUEE_ASSERT(quee_sprite_add_frame(sprite, frame1) == 0, "We should have been able to add frame1");
     QUEE_ASSERT(sprite->num_frames == 1, "Should of had one frame");
     QUEE_ASSERT(quee_sprite_add_frame(sprite, frame2) == 0, "We should have been able to add frame2");
@@ -47,8 +47,8 @@ quee_test_result test_quee_sprite_update() {
     quee_sprite_init_frames(sprite, 2);
     QUEE_ASSERT(sprite->max_frames == 2, "Should have a max of two frames now!");
     QUEE_ASSERT(sprite->frame_index == 0, "Should have a frame index of 0");
-    quee_frame frame1 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 100};
-    quee_frame frame2 = {.rect = {.x = 0, .y = 0, .w = 32, .h = 32}, .ticks = 1000};
+    quee_frame frame1 = {.pos = {.x = 0, .y = 0}, .size = {.x = 32, .y = 32}, .ticks = 100};
+    quee_frame frame2 = {.pos = {.x = 0, .y = 0}, .size = {.x = 32, .y = 32}, .ticks = 1000};
     quee_sprite_add_frame(sprite, frame1);
     quee_sprite_add_frame(sprite, frame2);
     quee_frame *f_ptr = sprite->curr_frame;
