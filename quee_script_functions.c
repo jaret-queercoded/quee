@@ -27,6 +27,7 @@ int quee_script_get_pos(lua_State *L) {
 }
 
 int quee_script_set_pos(lua_State *L) {
+    //We don't have the right number of args
     if (lua_gettop(L) != 3) {
         //TODO error handling
         exit(EXIT_FAILURE);
@@ -45,3 +46,12 @@ int quee_script_set_pos(lua_State *L) {
     return 0;
 }
 
+int quee_script_get_delta_time(lua_State *L) {
+    //We don't have the right number of args
+    if (lua_gettop(L) != 1) {
+        exit(EXIT_FAILURE);
+    }
+    quee_entity *entity = check_lua_ptr(lua_touserdata(L, 1));
+    lua_pushnumber(L, entity->scene->delta_time);
+    return 1;
+}

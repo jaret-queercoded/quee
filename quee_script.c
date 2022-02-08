@@ -14,12 +14,16 @@
 
 quee_script_manager * create_quee_script_manager() {
     quee_script_manager *manager = malloc(sizeof(quee_script_manager));
-    manager->lua_state = luaL_newstate();
-    luaL_openlibs(manager->lua_state);
-    lua_pushcfunction(manager->lua_state, quee_script_get_pos);
-    lua_setglobal(manager->lua_state, "quee_script_get_pos");
-    lua_pushcfunction(manager->lua_state, quee_script_set_pos);
-    lua_setglobal(manager->lua_state, "quee_script_set_pos");
+    manager->L = luaL_newstate();
+    luaL_openlibs(manager->L);
+
+    //TODO figure out a way to register all of my functions a more generic way
+    lua_pushcfunction(manager->L, quee_script_get_pos);
+    lua_setglobal(manager->L, "quee_script_get_pos");
+    lua_pushcfunction(manager->L, quee_script_set_pos);
+    lua_setglobal(manager->L, "quee_script_set_pos");
+    lua_pushcfunction(manager->L, quee_script_get_delta_time);
+    lua_setglobal(manager->L, "quee_script_get_delta_time");
     return manager;
 }
 
@@ -39,25 +43,32 @@ bool check_script_for_function(const char *path, const char *function) {
     return false;
 }
 
+//TODO need to make sure that all entities have a unique name or maybe should use their id instead of their name
+//not entirely sure
 quee_script * create_quee_script(quee_script_manager *manager, const char *path, quee_entity *entity) {
     if(path == NULL) {
         quee_set_error("Attempted to load a script with a null path");
         return NULL;
     }
-    if(luaL_dofile(manager->lua_state, path)) {
-        quee_set_error("Couldn't load lua script %s: %s", path, lua_tostring(manager->lua_state, -1));
+    //Load the information from the script
+    if(luaL_dofile(manager->L, path)) {
+        quee_set_error("Couldn't load lua script %s: %s", path, lua_tostring(manager->L, -1));
         return NULL;
     }
-    lua_setglobal(manager->lua_state, entity->name);
-    lua_settop(manager->lua_state, 0);
+    //Create a table to store the infomation that we loaded
+    //We use the entity name as the name so that we can have multiple entities using the same script
+    //If we just use the path like I initially tried we will overwrite the functions and all entities
+    //That use the same script will use the same local variables
+    lua_setglobal(manager->L, entity->name);
+    lua_settop(manager->L, 0);
 
+    //Create the script that we are going to return
     quee_script *script = malloc(sizeof(quee_script));
-    script->lua_state = manager->lua_state;
+    script->L = manager->L;
     script->entity = entity;
     script->type = 0;
     //Check the script too see if it has any expected functions for later use
     if(check_script_for_function(path, "onCreate(entity)")) {
-        printf("Setting on create bit\n");
         script->type |= QUEE_ON_CREATE_BIT; 
     }
     if(check_script_for_function(path, "onUpdate(entity)")) {
@@ -67,13 +78,14 @@ quee_script * create_quee_script(quee_script_manager *manager, const char *path,
 }
 
 int run_quee_script_function(quee_script *script, const char *function) {
-    //Retrieve the tabel containing the functions of the chunk
-    lua_getglobal(script->lua_state, script->entity->name);
+    //Retrieve the tabel containing the script for the entity
+    lua_getglobal(script->L, script->entity->name);
     //Get the function we want to call
-    lua_getfield(script->lua_state, -1, function);
-    lua_pushlightuserdata(script->lua_state, script->entity);
-    if(lua_pcall(script->lua_state, 1, 0, 0) != LUA_OK) {
-        quee_set_error("Couldn't run lua function %s:%s\nError: %s\n", script->entity->name, function, lua_tostring(script->lua_state, -1));
+    lua_getfield(script->L, -1, function);
+    //All of quees defined functions require at least the entity so we push that here
+    lua_pushlightuserdata(script->L, script->entity);
+    if(lua_pcall(script->L, 1, 0, 0) != LUA_OK) {
+        quee_set_error("Couldn't run lua function %s:%s\nError: %s\n", script->entity->name, function, lua_tostring(script->L, -1));
         return -1;
     }
     return 0;
@@ -81,7 +93,7 @@ int run_quee_script_function(quee_script *script, const char *function) {
 
 
 void destroy_quee_script_manager(quee_script_manager **manager) {
-    lua_close((*manager)->lua_state);
+    lua_close((*manager)->L);
     free(*manager);
     *manager = NULL;
 }

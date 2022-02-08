@@ -8,10 +8,10 @@
 quee_test_result test_quee_script_creation() {
     quee_script_manager *manager = create_quee_script_manager();
     QUEE_ASSERT(manager, "We should have a manager after creation");
-    QUEE_ASSERT(manager->lua_state, "We should have a lua state after creation");
+    QUEE_ASSERT(manager->L, "We should have a lua state after creation");
     quee_script *script = create_quee_script(manager, TEST_SCRIPT_PATH);
     QUEE_ASSERT(script, "We should have a script now");
-    QUEE_ASSERT(script->lua_state == manager->lua_state, "Script and manager should have the same lua state");
+    QUEE_ASSERT(script->L == manager->L, "Script and manager should have the same lua state");
     QUEE_ASSERT(strcmp(script->path, TEST_SCRIPT_PATH) == 0, "We didn't save the path correctly");
     destroy_quee_script(&script);
     QUEE_ASSERT(script == NULL, "Dangling script ptr!");

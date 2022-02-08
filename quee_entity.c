@@ -14,9 +14,10 @@ static unsigned int NEXT_ID = 0;
  *
  * @return An empty entity that you then add compnents to 
  */
-quee_entity * create_quee_entity() {
+quee_entity* create_quee_entity(quee_scene *scene) {
     quee_entity *entity = malloc(sizeof(quee_entity));
     entity->type = 0;
+    entity->scene = scene;
     entity->name = NULL;
     entity->sprite = NULL;
     entity->script = NULL;

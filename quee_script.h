@@ -10,13 +10,13 @@ typedef struct quee_script_manager quee_script_manager;
 typedef struct quee_script quee_script;
 
 struct quee_script_manager {
-    lua_State *lua_state;
+    lua_State *L;
 };
 
 #define QUEE_ON_CREATE_BIT 0x01
 #define QUEE_ON_UDPATE_BIT 0x02
 struct quee_script {
-    lua_State *lua_state;
+    lua_State *L;
     quee_entity *entity;
     uint32_t type:2;
 };

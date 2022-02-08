@@ -3,6 +3,7 @@
 
 #include "quee_sprite.h"
 #include "quee_script.h"
+#include "quee_scene.h"
 
 #define QUEE_SPRITE_BIT 0x01 
 #define QUEE_SCRIPT_BIT 0x02
@@ -17,13 +18,14 @@ struct quee_entity {
     unsigned int id;
     unsigned int type:2;
     char *name;
+    quee_scene *scene;
     quee_sprite *sprite; 
     quee_script *script;
     quee_vec2f pos;
     quee_vec2i size;
 };
 
-quee_entity * create_quee_entity();
+quee_entity * create_quee_entity(quee_scene *scene);
 void destroy_quee_entity(quee_entity **entity);
 int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr);
 void update_quee_entity(quee_entity *entity, unsigned int delta_ticks);

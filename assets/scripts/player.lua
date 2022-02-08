@@ -1,28 +1,28 @@
-local myplayer = {}
+local player_module = {}
 Player = {}
 Player.__index = Player
 
-function Player:create(health, x, y)
+local move_speed = 100.0
+
+function Player:create(health)
     local plyr = {}
     setmetatable(plyr, Player)
     plyr.health = health
-    plyr.x = x
-    plyr.y = y
+    plyr.x = 0.0
+    plyr.y = 0.0
     return plyr
 end
 
-_G.player = Player:create(100, 0.0, 0.0)
+player = Player:create(100)
 -- quee functions
-function myplayer.onCreate(entity)
-    print('onCreate')
+function player_module.onCreate(entity)
     player.x, player.y = quee_script_get_pos(entity)
 end
 
-function myplayer.onUpdate(entity)
-    player.x = player.x + 1
-    print(player.x .. player.y)
+function player_module.onUpdate(entity)
+    local delta_time = quee_script_get_delta_time(entity)
+    player.x = player.x + (move_speed * delta_time)
     quee_script_set_pos(entity, player.x, player.y)
-    print('Player Health: ' .. player.health)
 end
 
-return myplayer
+return player_module

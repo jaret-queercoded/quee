@@ -24,6 +24,7 @@ struct quee_scene_manager {
 struct quee_scene {
     char name[MAX_STR_LEN];
     bool render;
+    double delta_time;
     uint64_t max_entities;
     uint64_t current_entities;
     quee_entity** entities;
