@@ -16,6 +16,7 @@ LUA=lua/liblua.a
 
 all: lua $(EXEC_FILE) 
 test: lua $(TEST_FILE) 
+runtest: test
 	@./$(TEST_FILE)
 
 lua: 
