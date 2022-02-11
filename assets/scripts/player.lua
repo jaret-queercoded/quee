@@ -22,6 +22,7 @@ end
 function player_module.onUpdate(entity)
     local delta_time = quee_script_get_delta_time(entity)
     player.x = player.x + (move_speed * delta_time)
+    player.y = player.y + (move_speed * delta_time)
     quee_script_set_pos(entity, player.x, player.y)
 end
 

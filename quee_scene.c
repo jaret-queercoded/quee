@@ -187,13 +187,21 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
                 check_quee_ptr(create_quee_script(script_manager, path, entity));
             check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
         }
+        //If we don't match the expected type by now something is fucked
         assert(entity->type == expected_type);
-        // We should now have everything that we need to run the onCreate event if we need too
+        scene->entities[i] = entity; 
+    }
+
+    //Now that all entities are loaded we will run their onCreate
+    //This way if any of their scripts reference another entity
+    //It should be ready to go and accesible
+    for(int i = 0; i < scene->current_entities; i++) {
+        quee_entity *entity = scene->entities[i];
         if(entity->type & QUEE_SCRIPT_BIT && entity->script->type & QUEE_ON_CREATE_BIT) {
             check_quee_code(run_quee_script_function(entity->script, "onCreate"));
         }
-        scene->entities[i] = entity; 
     }
+
     return scene;
 }
 

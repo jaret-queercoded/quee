@@ -4,7 +4,7 @@
     "entities": [
         {
             "type": 3,
-            "name": "sprite1",
+            "name": "player",
             "pos": [100,100],
             "script": "assets/scripts/player.lua",
             "path": "assets/sad.png",
