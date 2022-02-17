@@ -1,11 +1,13 @@
 #include "quee_script_functions.h"
 #include "lua.h"
 #include "quee_entity.h"
+#include "quee_global_manager.h"
 
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+extern quee_global_manager *g_quee_manager;
 
 void * check_lua_ptr_func(void *ptr, const char *func)
 {
@@ -56,3 +58,16 @@ int quee_script_get_delta_time(lua_State *L) {
     return 1;
 }
 
+int quee_script_is_key_pressed(lua_State *L) {
+    if(lua_gettop(L) != 1) {
+        //TODO error handling
+        exit(EXIT_FAILURE);
+    }
+    if(!lua_isinteger(L, 1)) {
+        exit(EXIT_FAILURE);
+    }
+    int code = lua_tointeger(L, 1);
+    bool pressed = g_quee_manager->input_manager->key_pressed[code];
+    lua_pushboolean(L, pressed);
+    return 1;
+}

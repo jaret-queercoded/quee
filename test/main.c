@@ -41,6 +41,8 @@ quee_test tests[] = {
 //We use a global render pointer in c so I just make a null one here for tests
 typedef struct SDL_Renderer SDL_Renderer;
 SDL_Renderer *g_renderer = NULL;
+typedef struct quee_global_manager quee_global_manager;
+quee_global_manager *g_quee_manager = NULL;
 
 int main(int argc, char** argv) {
     // setup sdl for tests that need it
