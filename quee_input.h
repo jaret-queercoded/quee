@@ -8,7 +8,7 @@ typedef struct quee_input_manager quee_input_manager;
 
 struct quee_input_manager { 
     const uint8_t *current_frame;
-    const uint8_t *previous_frame;
+    uint8_t *previous_frame;
 };
 
 quee_input_manager* create_quee_input_manager();

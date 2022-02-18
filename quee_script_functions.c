@@ -66,7 +66,7 @@ int quee_script_is_key_held(lua_State *L) {
     if(!lua_isstring(L, 1)) {
         exit(EXIT_FAILURE);
     }
-    char* key = lua_tostring(L, 1);
+    const char* key = lua_tostring(L, 1);
     bool pressed = quee_input_is_held(g_quee_manager->input_manager, key);
     lua_pushboolean(L, pressed);
     return 1;
@@ -80,7 +80,7 @@ int quee_script_is_key_pressed(lua_State *L) {
     if(!lua_isstring(L, 1)) {
         exit(EXIT_FAILURE);
     }
-    char* key = lua_tostring(L, 1);
+    const char* key = lua_tostring(L, 1);
     bool pressed = quee_input_is_pressed(g_quee_manager->input_manager, key);
     lua_pushboolean(L, pressed);
     return 1;
@@ -94,7 +94,7 @@ int quee_script_was_key_released(lua_State *L) {
     if(!lua_isstring(L, 1)) {
         exit(EXIT_FAILURE);
     }
-    char* key = lua_tostring(L, 1);
+    const char* key = lua_tostring(L, 1);
     bool released = quee_input_was_released(g_quee_manager->input_manager, key);
     lua_pushboolean(L, released);
     return 1;
