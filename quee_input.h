@@ -2,27 +2,22 @@
 #define QUEE_INPUT_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct quee_input_manager quee_input_manager;
 
-#define QUEE_NUMBER_OF_KEYS 200 
-
-//TODO expand this to have more information than if the key is pressed
-//I want to be able to tell if the key was just released
-//I also want the ability to remap keys from the engine
-//Perhpas just monitoring a few user defined keys
-//So looks like this way to do this is bad
-//I should look into SDL_GetKeyState that should be able to tell me if keys are pressed
-//I didn't know that SDL keeps track of that but it is cool that they do
 struct quee_input_manager { 
-    bool key_pressed[QUEE_NUMBER_OF_KEYS];
+    const uint8_t *current_frame;
+    const uint8_t *previous_frame;
 };
 
 quee_input_manager* create_quee_input_manager();
 void destroy_quee_input_manager(quee_input_manager **manager);
+void update_quee_input(quee_input_manager *manager);
 
-void quee_input_pressed(quee_input_manager *manager, int code);
-void quee_input_released(quee_input_manager *manager, int code);
+bool quee_input_is_held(quee_input_manager *manager, const char *key);
+bool quee_input_is_pressed(quee_input_manager *manager, const char *key);
+bool quee_input_was_released(quee_input_manager *manager, const char *key);
 
 #endif
 

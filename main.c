@@ -39,13 +39,12 @@ int main(void) {
     bool quit = false;
 
     uint32_t frame_start, frame_end, prev_frame_start;
-    unsigned int delta_ticks = 0.0f;
+    unsigned int delta_ticks = 0;
     float ms_elapsed;
     prev_frame_start = SDL_GetTicks();
     while(!quit) {
         frame_start = SDL_GetTicks();
         delta_ticks = frame_start - prev_frame_start;
-        /*printf("delta_ticks: %d\n", delta_ticks);*/
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -57,13 +56,7 @@ int main(void) {
                         case SDLK_ESCAPE:
                             quit = true;
                             break;
-                        default:
-                            quee_input_pressed(g_quee_manager->input_manager, event.key.keysym.sym);
-                            break;
                     }
-                    break;
-                case SDL_KEYUP:
-                    quee_input_released(g_quee_manager->input_manager, event.key.keysym.sym);
                     break;
             }
         }
@@ -81,10 +74,13 @@ int main(void) {
             );
         }
         SDL_RenderPresent(g_renderer);
+        
+        //Save this frames input so that we can tell if we release keys
+        update_quee_input(g_quee_manager->input_manager);
+
         frame_end = SDL_GetTicks();
 
         ms_elapsed = (frame_end - frame_start) / 1000.0f;
-
 
         /*printf("FPS: %2f Ticks: %f\n", 1000.0f / (TICKS_PER_FRAME - ms_elapsed), ms_elapsed);*/
 
