@@ -11,6 +11,9 @@ typedef struct quee_input_manager quee_input_manager;
 //I want to be able to tell if the key was just released
 //I also want the ability to remap keys from the engine
 //Perhpas just monitoring a few user defined keys
+//So looks like this way to do this is bad
+//I should look into SDL_GetKeyState that should be able to tell me if keys are pressed
+//I didn't know that SDL keeps track of that but it is cool that they do
 struct quee_input_manager { 
     bool key_pressed[QUEE_NUMBER_OF_KEYS];
 };
