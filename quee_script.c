@@ -24,6 +24,12 @@ quee_script_manager * create_quee_script_manager() {
     lua_setglobal(manager->L, "quee_script_set_pos");
     lua_pushcfunction(manager->L, quee_script_get_delta_time);
     lua_setglobal(manager->L, "quee_script_get_delta_time");
+    lua_pushcfunction(manager->L, quee_script_is_key_held);
+    lua_setglobal(manager->L, "quee_script_is_key_held");
+    lua_pushcfunction(manager->L, quee_script_is_key_pressed);
+    lua_setglobal(manager->L, "quee_script_is_key_pressed");
+    lua_pushcfunction(manager->L, quee_script_was_key_released);
+    lua_setglobal(manager->L, "quee_script_was_key_released");
     return manager;
 }
 
