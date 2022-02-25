@@ -1,7 +1,9 @@
 #include "quee_entity.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
+#include "quee_collider.h"
 #include "quee_helpers.h"
 #include "quee_sprite.h"
 #include "quee_script.h"
@@ -41,6 +43,9 @@ void destroy_quee_entity(quee_entity **entity) {
     if((*entity)->type & QUEE_SCRIPT_BIT) {
         destroy_quee_script(&(*entity)->script);
     }
+    if((*entity)->type & QUEE_BOX_COLLIDER_BIT) {
+        destroy_quee_box_collider(&(*entity)->box_collider);
+    }
     free(*entity);
     entity = NULL;
 }
@@ -66,6 +71,9 @@ int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr) {
         case QUEE_SCRIPT_BIT:
             entity->script = ptr;
             break;
+        case QUEE_BOX_COLLIDER_BIT:
+            entity->box_collider = ptr;
+            break;
         default:
             quee_set_error("quee_entity doesn't support that type: 0x%04x", type);
             return -1;
@@ -82,5 +90,15 @@ void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
     }
     if(entity->type & QUEE_SPRITE_BIT) {
         update_quee_sprite(entity->sprite, delta_ticks);
+    }
+    if(entity->type & QUEE_BOX_COLLIDER_BIT) {
+        for(int i = 0; i < entity->scene->current_entities; i++) {
+            quee_entity *e = entity->scene->entities[i];
+            if(entity != e) {
+                if(quee_check_collision(entity, e)) {
+                    printf("we have a collison\n");
+                }
+            }
+        }
     }
 }

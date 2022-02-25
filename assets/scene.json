@@ -3,7 +3,7 @@
     "render" : true,
     "entities": [
         {
-            "type": 3,
+            "type": 7,
             "name": "player",
             "pos": [100,100],
             "script": "assets/scripts/player.lua",
@@ -11,7 +11,11 @@
             "frames": [
                 [0,0,32,32,1000],
                 [32,0,32,32,500]
-            ] 
+            ], 
+            "box collider": {
+                "size": [32,32],
+                "mask": 1
+            }
         },
         {
             "type": 3,
@@ -25,14 +29,18 @@
             ] 
         },
         {
-            "type": 1,
+            "type": 5,
             "name": "enemy2",
             "pos": [110,10],
             "path": "assets/sad.png",
             "frames": [
                 [0,0,32,32,1000],
                 [32,0,32,32,500]
-            ] 
+            ], 
+            "box collider": {
+                "size": [32,32],
+                "mask": 1
+            }
         }
     ]
 }
