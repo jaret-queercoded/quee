@@ -92,7 +92,8 @@ void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
         update_quee_sprite(entity->sprite, delta_ticks);
     }
     if(entity->type & QUEE_BOX_COLLIDER_BIT) {
-        for(int i = 0; i < entity->scene->current_entities; i++) {
+        //TODO using id here is a hack and something better needs to 
+        for(int i = entity->id; i < entity->scene->current_entities; i++) {
             quee_entity *e = entity->scene->entities[i];
             if(entity != e) {
                 if(quee_check_collision(entity, e)) {

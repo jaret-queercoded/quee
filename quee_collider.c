@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 quee_box_collider* create_quee_box_collider(quee_vec2i size, uint8_t mask) {
     quee_box_collider *box = malloc(sizeof(quee_box_collider));
@@ -28,11 +29,11 @@ bool quee_check_collision(quee_entity *e1, quee_entity *e2) {
     double e2le = e2->pos.x;
     double e2te = e2->pos.y;
     double e2be = e2->pos.y + e2->box_collider->size.y;
-    printf("e1: %f, %f, %f, %f\n", e1le, e1re, e1te, e1be);
-    printf("e2: %f, %f, %f, %f\n", e2le, e2re, e2te, e2be);
-    if(e1re <= e2le &&
-        e1le >= e2re) {
-        printf("Collision: %f,%f %f,%f\n", e1->pos.x, e1->pos.y, e2->pos.x, e2->pos.y);
+    if(e1re >= e2le &&
+       e1le <= e2re &&
+       e1te <= e2be &&
+       e1be >= e2te
+      ) {
         return true;
     }
     return false;
