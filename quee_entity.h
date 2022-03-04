@@ -4,9 +4,11 @@
 #include "quee_sprite.h"
 #include "quee_script.h"
 #include "quee_scene.h"
+#include "quee_collider.h"
 
 #define QUEE_SPRITE_BIT 0x01 
 #define QUEE_SCRIPT_BIT 0x02
+#define QUEE_BOX_COLLIDER_BIT 0x04
 
 typedef struct quee_entity quee_entity;
 
@@ -15,12 +17,13 @@ typedef struct quee_entity quee_entity;
 //this will make it much easier to traverse the entity for locating
 //other entities to use them in scripts and what not
 struct quee_entity {
-    unsigned int id;
-    unsigned int type:2;
+    uint32_t id;
+    uint32_t type;
     char *name;
     quee_scene *scene;
     quee_sprite *sprite; 
     quee_script *script;
+    quee_box_collider *box_collider;
     quee_vec2f pos;
     quee_vec2i size;
 };

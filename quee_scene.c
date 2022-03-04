@@ -1,4 +1,5 @@
 #include "quee_scene.h"
+#include "quee_collider.h"
 #include "quee_helpers.h"
 #include "quee_entity.h"
 #include "quee_script.h"
@@ -105,7 +106,8 @@ quee_scene* create_quee_scene() {
 //TODO need to make this function more robust so we can gracefully fail on malformed scenes
 quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager, quee_script_manager *script_manager) {
     FILE *fp;
-    char buffer[1024];
+    //TODO Fix this so we can read larger files and don't have to worry about this anymore
+    char buffer[2048];
     json_object *parsed_json;
     json_object *entities_json;
     json_object *entity_json;
@@ -118,7 +120,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
         quee_set_error("Coulnd't open file");
         return NULL;
     }
-    fread(buffer, 1024, 1, fp);
+    fread(buffer, 2048, 1, fp);
     fclose(fp);
 
     parsed_json = json_tokener_parse(buffer);
@@ -186,6 +188,21 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
             quee_script *script = 
                 check_quee_ptr(create_quee_script(script_manager, path, entity));
             check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
+        }
+        //Loading box collider
+        if(expected_type & QUEE_BOX_COLLIDER_BIT) {
+            json_object *box_collider_json;
+            json_object_object_get_ex(entity_json, "box collider", &box_collider_json);
+            json_object *size_json;
+            json_object_object_get_ex(box_collider_json, "size", &size_json);
+            json_object *mask_json;
+            json_object_object_get_ex(box_collider_json, "mask", &mask_json);
+            quee_vec2i size;
+            size.x = json_object_get_int(json_object_array_get_idx(size_json, 0));
+            size.y = json_object_get_int(json_object_array_get_idx(size_json, 1));
+            uint8_t mask = json_object_get_int(mask_json);
+            quee_box_collider *collider = check_quee_ptr(create_quee_box_collider(size, mask));
+            check_quee_code(add_to_quee_entity(entity, QUEE_BOX_COLLIDER_BIT, collider));
         }
         //If we don't match the expected type by now something is fucked
         assert(entity->type == expected_type);
