@@ -21,6 +21,10 @@ bool quee_check_collision(quee_entity *e1, quee_entity *e2) {
     if(e1->box_collider == NULL || e2->box_collider == NULL) {
         return false;
     }
+    //If we dont have a matching bit in the masks we don't collide
+    if((e1->box_collider->collision_mask & e2->box_collider->collision_mask) == 0) {
+        return false;
+    }
     double e1re = e1->pos.x + e1->box_collider->size.x;
     double e1le = e1->pos.x;
     double e1te = e1->pos.y;
