@@ -30,7 +30,6 @@ int main(void) {
 
     g_renderer =
         check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
-    SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 255);
 
     g_quee_manager = create_quee_global_manager();
 
@@ -43,6 +42,7 @@ int main(void) {
     float ms_elapsed;
     prev_frame_start = SDL_GetTicks();
     while(!quit) {
+        SDL_SetRenderDrawColor(g_renderer, 0, 255, 0, 255);
         frame_start = SDL_GetTicks();
         delta_ticks = frame_start - prev_frame_start;
         SDL_Event event;
@@ -55,6 +55,9 @@ int main(void) {
                     switch(event.key.keysym.sym) {
                         case SDLK_ESCAPE:
                             quit = true;
+                            break;
+                        case SDLK_SEMICOLON:
+                            quee_toggle_debug_render();
                             break;
                     }
                     break;

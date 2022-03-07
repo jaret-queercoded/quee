@@ -96,7 +96,6 @@ quee_scene* create_quee_scene() {
     scene->delta_time = 0;
     scene->current_entities = 0;
     scene->max_entities = 0;
-    //TODO set the scene name
     strcpy(scene->name, "");
     scene->render = false;
     scene->entities = NULL;
@@ -215,7 +214,7 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
     for(int i = 0; i < scene->current_entities; i++) {
         quee_entity *entity = scene->entities[i];
         if(entity->type & QUEE_SCRIPT_BIT && entity->script->type & QUEE_ON_CREATE_BIT) {
-            check_quee_code(run_quee_script_function(entity->script, "onCreate"));
+            check_quee_code(run_quee_script_function(entity->script, "onCreate", NULL));
         }
     }
 

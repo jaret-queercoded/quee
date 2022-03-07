@@ -85,7 +85,7 @@ int add_to_quee_entity(quee_entity *entity, unsigned int type, void *ptr) {
 void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
     if(entity->type & QUEE_SCRIPT_BIT) {
         if(entity->script->type & QUEE_ON_UDPATE_BIT) {
-            check_quee_code(run_quee_script_function(entity->script, "onUpdate"));
+            check_quee_code(run_quee_script_function(entity->script, "onUpdate", NULL));
         }
     }
     if(entity->type & QUEE_SPRITE_BIT) {
@@ -97,7 +97,7 @@ void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
             quee_entity *e = entity->scene->entities[i];
             if(entity != e) {
                 if(quee_check_collision(entity, e)) {
-                    printf("we have a collison\n");
+                    check_quee_code(run_quee_script_function(entity->script, "onCollision", e));
                 }
             }
         }

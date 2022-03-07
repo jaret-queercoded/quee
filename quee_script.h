@@ -15,15 +15,16 @@ struct quee_script_manager {
 
 #define QUEE_ON_CREATE_BIT 0x01
 #define QUEE_ON_UDPATE_BIT 0x02
+#define QUEE_ON_COLLIDE_BIT 0x04
 struct quee_script {
     lua_State *L;
     quee_entity *entity;
-    uint32_t type:2;
+    uint32_t type:3;
 };
 
 quee_script_manager * create_quee_script_manager();
 quee_script * create_quee_script(quee_script_manager *manager, const char *path, quee_entity *entity);
-int run_quee_script_function(quee_script *script, const char *function);
+int run_quee_script_function(quee_script *script, const char *function, void *arg);
 void destroy_quee_script_manager(quee_script_manager **manager);
 void destroy_quee_script(quee_script **script);
 
