@@ -26,13 +26,16 @@ void render_entity(quee_entity *entity, SDL_Renderer *renderer) {
 }
 
 void render_debug(quee_entity *entity, SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     if(entity->type & QUEE_BOX_COLLIDER_BIT){
         SDL_Rect debug_box;
         debug_box.x = entity->pos.x;
         debug_box.y = entity->pos.y;
         debug_box.w = entity->box_collider->size.x;
         debug_box.h = entity->box_collider->size.y;
+        if(entity->box_collider->colliding) {
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        }
         SDL_RenderDrawRect(renderer, &debug_box);
     }
 }

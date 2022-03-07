@@ -12,6 +12,7 @@ typedef struct quee_entity quee_entity;
 struct quee_box_collider {
     quee_vec2i size;
     uint8_t collision_mask;
+    bool colliding;
 };
 
 quee_box_collider* create_quee_box_collider(quee_vec2i size, uint8_t mask);
