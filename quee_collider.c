@@ -9,6 +9,7 @@ quee_box_collider* create_quee_box_collider(quee_vec2i size, uint8_t mask) {
     quee_box_collider *box = malloc(sizeof(quee_box_collider));
     box->size = size;
     box->collision_mask = mask;
+    box->colliding = false;
     return box;
 }
 
@@ -38,6 +39,8 @@ bool quee_check_collision(quee_entity *e1, quee_entity *e2) {
        e1te <= e2be &&
        e1be >= e2te
       ) {
+        e1->box_collider->colliding = true;
+        e2->box_collider->colliding = true;
         return true;
     }
     return false;
