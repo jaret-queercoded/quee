@@ -51,7 +51,7 @@ quee_test_result test_quee_script_run_function() {
     entity->name = malloc(sizeof(char) * 5);
     strcpy(entity->name, "test");
     quee_script *script = create_quee_script(manager, TEST_SCRIPT_PATH, entity);
-    int result = run_quee_script_function(script, "onUpdate");
+    int result = run_quee_script_function(script, "onUpdate", NULL);
     QUEE_ASSERT(result == 0, "We didn't run the script correctly!");
     destroy_quee_script(&script);
     destroy_quee_script_manager(&manager);

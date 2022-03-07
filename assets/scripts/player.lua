@@ -19,6 +19,10 @@ function player_module.onCreate(entity)
     player.x, player.y = quee_script_get_pos(entity)
 end
 
+function player_module.onCollision(entity, collision)
+    print(quee_script_get_name(collision))
+end
+
 function player_module.onUpdate(entity)
     local delta_time = quee_script_get_delta_time(entity)
     if quee_script_is_key_held('w') then

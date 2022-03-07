@@ -30,6 +30,8 @@ quee_script_manager * create_quee_script_manager() {
     lua_setglobal(manager->L, "quee_script_is_key_pressed");
     lua_pushcfunction(manager->L, quee_script_was_key_released);
     lua_setglobal(manager->L, "quee_script_was_key_released");
+    lua_pushcfunction(manager->L, quee_script_get_name);
+    lua_setglobal(manager->L, "quee_script_get_name");
     return manager;
 }
 
@@ -80,17 +82,25 @@ quee_script * create_quee_script(quee_script_manager *manager, const char *path,
     if(check_script_for_function(path, "onUpdate(entity)")) {
         script->type |= QUEE_ON_UDPATE_BIT; 
     }
+    if(check_script_for_function(path, "onCollision(entity")) {
+        script->type |= QUEE_ON_COLLIDE_BIT; 
+    }
     return script;
 }
 
-int run_quee_script_function(quee_script *script, const char *function) {
+int run_quee_script_function(quee_script *script, const char *function, void *arg) {
+    int args = arg ? 2 : 1;
     //Retrieve the tabel containing the script for the entity
     lua_getglobal(script->L, script->entity->name);
     //Get the function we want to call
     lua_getfield(script->L, -1, function);
     //All of quees defined functions require at least the entity so we push that here
     lua_pushlightuserdata(script->L, script->entity);
-    if(lua_pcall(script->L, 1, 0, 0) != LUA_OK) {
+    //Sometimes we need to pass in an extra pointer like when we collide
+    if(arg != NULL) {
+        lua_pushlightuserdata(script->L, arg);
+    }
+    if(lua_pcall(script->L, args, 0, 0) != LUA_OK) {
         quee_set_error("Couldn't run lua function %s:%s\nError: %s\n", script->entity->name, function, lua_tostring(script->L, -1));
         return -1;
     }

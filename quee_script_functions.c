@@ -22,6 +22,9 @@ void * check_lua_ptr_func(void *ptr, const char *func)
 #define check_lua_ptr(ptr) check_lua_ptr_func(ptr, __func__);
 
 int quee_script_get_pos(lua_State *L) {
+    if(!lua_isuserdata(L, 1)) {
+        exit(EXIT_FAILURE);
+    }
     quee_entity *entity = check_lua_ptr(lua_touserdata(L, 1));
     lua_pushnumber(L, entity->pos.x);
     lua_pushnumber(L, entity->pos.y);
@@ -32,6 +35,9 @@ int quee_script_set_pos(lua_State *L) {
     //We don't have the right number of args
     if (lua_gettop(L) != 3) {
         //TODO error handling
+        exit(EXIT_FAILURE);
+    }
+    if(!lua_isuserdata(L, 1)) {
         exit(EXIT_FAILURE);
     }
     quee_entity *entity = check_lua_ptr(lua_touserdata(L, 1));
@@ -97,5 +103,18 @@ int quee_script_was_key_released(lua_State *L) {
     const char* key = lua_tostring(L, 1);
     bool released = quee_input_was_released(g_quee_manager->input_manager, key);
     lua_pushboolean(L, released);
+    return 1;
+}
+
+int quee_script_get_name(lua_State *L) {
+    if(lua_gettop(L) != 1) {
+        //TODO error handling
+        exit(EXIT_FAILURE);
+    }
+    if(!lua_isuserdata(L, 1)) {
+        exit(EXIT_FAILURE);
+    }
+    quee_entity *entity = check_lua_ptr(lua_touserdata(L, 1));
+    lua_pushstring(L, entity->name);
     return 1;
 }
