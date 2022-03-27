@@ -32,6 +32,8 @@ quee_script_manager * create_quee_script_manager() {
     lua_setglobal(manager->L, "quee_script_was_key_released");
     lua_pushcfunction(manager->L, quee_script_get_name);
     lua_setglobal(manager->L, "quee_script_get_name");
+    lua_pushcfunction(manager->L, quee_script_play_sound);
+    lua_setglobal(manager->L, "quee_script_play_sound");
     return manager;
 }
 

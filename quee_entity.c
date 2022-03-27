@@ -23,6 +23,7 @@ quee_entity* create_quee_entity(quee_scene *scene) {
     entity->name = NULL;
     entity->sprite = NULL;
     entity->script = NULL;
+    entity->box_collider = NULL;
     entity->pos.x = 0.0;
     entity->pos.y = 0.0;
     entity->size.x = 0;
@@ -95,6 +96,7 @@ void update_quee_entity(quee_entity *entity, unsigned int delta_ticks) {
         entity->box_collider->colliding = false;
         for(int i = 0; i < entity->scene->current_entities; i++) {
             quee_entity *e = entity->scene->entities[i];
+            if(e == NULL) continue;
             if(entity != e) {
                 if(quee_check_collision(entity, e)) {
                     if(entity->type & QUEE_SCRIPT_BIT && entity->script->type & QUEE_ON_COLLIDE_BIT) {

@@ -2,6 +2,7 @@
 #include "lua.h"
 #include "quee_entity.h"
 #include "quee_global_manager.h"
+#include "quee_sound.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -117,4 +118,12 @@ int quee_script_get_name(lua_State *L) {
     quee_entity *entity = check_lua_ptr(lua_touserdata(L, 1));
     lua_pushstring(L, entity->name);
     return 1;
+}
+int quee_script_play_sound(lua_State *L) {
+    if(lua_gettop(L) != 0) {
+        //TODO error handling
+        exit(EXIT_FAILURE);
+    }
+    quee_play_sound(g_quee_manager->sound_manager);
+    return 0;
 }
