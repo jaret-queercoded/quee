@@ -27,7 +27,7 @@ jobs:
       - name: install_dependencies
         run: |
           sudo apt-get update -y -qq
-          sudo apt-get install libsdl2-dev libsdl2-image-dev libjson-c-dev
+          sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libjson-c-dev
       - name: build
         run: make
       - name: build test
