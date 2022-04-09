@@ -1,5 +1,5 @@
 CC=clang
-PKGS=sdl2 SDL2_image json-c
+PKGS=sdl2 SDL2_image SDL2_mixer json-c
 CCFLAGS=-Wall -Werror -pedantic -DDEBUG -g -c `pkg-config --cflags $(PKGS)` -Ilua/ -std=c11
 LIBS=`pkg-config --libs $(PKGS)` -lm -Llua/ -llua -ldl 
 EXEC_FILE=quee
@@ -8,7 +8,7 @@ TEST_DIR=test
 OBJDIR=objs
 
 OBJECTS=$(addprefix $(OBJDIR)/, quee_helpers.o quee_entity.o quee_sprite.o quee_scene.o quee_renderer.o quee_texture.o quee_script.o quee_script_functions.o \
-		quee_input.o quee_global_manager.o quee_collider.o)
+		quee_input.o quee_global_manager.o quee_collider.o quee_sound.o)
 MAIN_OBJECT=$(addprefix $(OBJDIR)/, main.o)
 TEST_OBJECTS=$(addprefix $(OBJDIR)/$(TEST_DIR)/, main.o quee_test_helper.o quee_scene_test.o quee_texture_test.o quee_sprite_test.o quee_script_test.o)
 TEST_OBJECTS+=$(OBJECTS)
