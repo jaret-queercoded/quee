@@ -10,7 +10,7 @@ typedef struct quee_sound_node quee_sound_node;
 typedef struct quee_sound_manager quee_sound_manager;
 struct quee_sound {
     char name[MAX_STR_LEN];
-    Mix_Chunk *sound;
+    Mix_Chunk *chunk;
 };
 
 struct quee_sound_node {
@@ -23,9 +23,9 @@ struct quee_sound_manager {
     uint64_t capacity;
 };
 
-quee_sound_manager* create_quee_sound_manager();
+quee_sound_manager* create_quee_sound_manager(uint32_t capacity);
 int quee_load_sound(quee_sound_manager *manager, const char *path);
-void quee_play_sound(quee_sound_manager *manager, const char *sound_name);
+int quee_play_sound(quee_sound_manager *manager, const char *sound_name);
 void destroy_quee_sound_manager(quee_sound_manager **manager);
 
 #endif

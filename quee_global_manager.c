@@ -8,7 +8,7 @@ quee_global_manager* create_quee_global_manager() {
     manager->scene_manager = create_quee_scene_manager(10);
     manager->script_manager = create_quee_script_manager();
     manager->input_manager = create_quee_input_manager();
-    manager->sound_manager = create_quee_sound_manager();
+    manager->sound_manager = create_quee_sound_manager(1);
     return manager;
 }
 
