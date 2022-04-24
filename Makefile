@@ -1,6 +1,6 @@
 CC=clang
 PKGS=sdl2 SDL2_image SDL2_mixer json-c
-CCFLAGS=-Wall -Werror -pedantic -DDEBUG -g -c `pkg-config --cflags $(PKGS)` -Ilua/ -std=c11
+CCFLAGS= -pthread -Wall -Werror -pedantic -DDEBUG -g -c `pkg-config --cflags $(PKGS)` -Ilua/ -std=c11
 LIBS=`pkg-config --libs $(PKGS)` -lm -Llua/ -llua -ldl 
 EXEC_FILE=quee
 TEST_FILE=quee_test
