@@ -29,7 +29,7 @@ function player_module.onUpdate(entity)
         player.y = player.y - (move_speed * delta_time)
     end
     if quee_script_was_key_released('w') then
-        quee_script_play_sound('assets/sounds/nothere.ogg')
+        quee_script_play_sound('assets/sounds/test.ogg')
         print('w was released')
     end
     if quee_script_is_key_held('s') then
