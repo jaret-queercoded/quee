@@ -50,7 +50,6 @@ int quee_load_sound(quee_sound_manager* manager, const char *path) {
 
 int quee_play_sound(quee_sound_manager* manager, const char* sound_name) {
     int index = hash((unsigned char *)sound_name) % manager->capacity;
-    //TODO handle external chaining
     quee_sound_node *node = manager->nodes[index];
     while (strcmp(node->sound->name, sound_name) != 0) {
         if (node->next == NULL) {

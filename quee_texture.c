@@ -67,7 +67,6 @@ quee_texture* quee_texture_manager_get(quee_texture_manager *manager, const char
     int index = hash((unsigned char*)file_path) % manager->capacity;
     quee_texture *texture = NULL;
     quee_texture_node *node = NULL;
-    // Todo implement external chaining
     if(manager->nodes[index] == NULL) {
         node = create_quee_texture_node(file_path, NULL);
         manager->nodes[index] = node;
