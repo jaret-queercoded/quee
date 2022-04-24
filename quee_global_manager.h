@@ -6,6 +6,7 @@
 #include "quee_script.h"
 #include "quee_input.h"
 #include "quee_sound.h"
+#include "quee_thread.h"
 
 typedef struct quee_global_manager quee_global_manager;
 
@@ -15,6 +16,7 @@ struct quee_global_manager {
     quee_script_manager *script_manager;
     quee_input_manager *input_manager;
     quee_sound_manager *sound_manager;
+    quee_thread_pool *thread_pool;
 };
 
 quee_global_manager* create_quee_global_manager();

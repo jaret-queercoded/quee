@@ -9,11 +9,11 @@
 typedef struct quee_thread_work quee_thread_work;
 typedef struct quee_thread_pool quee_thread_pool;
 
-typedef void (*quee_thread_func)(void *arg);
+typedef void (*quee_thread_func)(void **arg);
 
 struct quee_thread_work {
     quee_thread_func func;
-    void *arg;
+    void **arg;
     quee_thread_work *next;
 };
 
@@ -31,7 +31,7 @@ struct quee_thread_pool {
 quee_thread_pool * create_quee_thread_pool(uint32_t size);
 void destroy_quee_thread_pool(quee_thread_pool **pool);
 
-bool quee_thread_pool_add_work(quee_thread_pool *pool, quee_thread_func func, void *arg);
+bool quee_thread_pool_add_work(quee_thread_pool *pool, quee_thread_func func, void **arg);
 void quee_thread_pool_wait(quee_thread_pool *pool);
 
 #endif

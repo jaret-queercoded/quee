@@ -6,7 +6,7 @@
 
 
 
-static quee_thread_work * quee_thread_pool_create_work(quee_thread_func func, void *arg) {
+static quee_thread_work * quee_thread_pool_create_work(quee_thread_func func, void **arg) {
     quee_thread_work *work;
     if(func == NULL)
         return NULL;
@@ -150,7 +150,7 @@ void destroy_quee_thread_pool(quee_thread_pool **pool_ptr_ptr) {
     pool_ptr_ptr = NULL;
 }
 
-bool quee_thread_pool_add_work(quee_thread_pool *pool, quee_thread_func func, void *arg) {
+bool quee_thread_pool_add_work(quee_thread_pool *pool, quee_thread_func func, void **arg) {
     quee_thread_work *work;
     //No pool no work
     if(pool == NULL) {

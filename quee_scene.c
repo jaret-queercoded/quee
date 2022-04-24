@@ -1,10 +1,12 @@
 #include "quee_scene.h"
+#include "quee_global_manager.h"
 #include "quee_collider.h"
 #include "quee_helpers.h"
 #include "quee_entity.h"
 #include "quee_script.h"
 #include "quee_texture.h"
 #include "quee_sprite.h"
+#include "quee_thread.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +15,8 @@
 
 #include <json_object.h>
 #include <json_tokener.h>
+
+extern quee_global_manager *g_quee_manager;
 
 quee_scene_manager* create_quee_scene_manager(uint64_t max_capacity) {
     quee_scene_manager *manager = malloc(sizeof(quee_scene_manager));
@@ -102,15 +106,93 @@ quee_scene* create_quee_scene() {
     return scene;
 }
 
+void create_quee_entity_thread_work(void **args) {
+    quee_scene *scene = args[0];
+    json_object *entities_json = args[1];
+    unsigned int i = *((unsigned int *)args[2]); 
+    json_object *entity_json;
+    json_object *enetity_type_json;
+    entity_json = json_object_array_get_idx(entities_json, i);
+    json_object_object_get_ex(entity_json, "type", &enetity_type_json);
+    quee_entity *entity = create_quee_entity(scene);
+    //Get the entity's name
+    json_object *name;
+    json_object_object_get_ex(entity_json, "name", &name);
+    entity->name = malloc(sizeof(char) * (strlen(json_object_get_string(name)) + 1));
+    strcpy(entity->name, json_object_get_string(name));
+    json_object *pos_json;
+    json_object_object_get_ex(entity_json, "pos", &pos_json);
+    if(pos_json) {
+        int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
+        int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
+        entity->pos.x = pos_x;
+        entity->pos.y = pos_y;
+    }
+    int expected_type = json_object_get_int(enetity_type_json);
+    //Check the type and load each part of the type
+    //Loading sprite
+    if(expected_type & QUEE_SPRITE_BIT) {
+        // Get the path to the texture
+        json_object *sprite_path_json;
+        json_object_object_get_ex(entity_json, "path", &sprite_path_json);
+        quee_texture *texture = 
+            check_quee_ptr(quee_texture_manager_get(g_quee_manager->texture_manager, json_object_get_string(sprite_path_json)));
+        quee_sprite *sprite = create_quee_sprite(texture);
+        // Load the frame information
+        json_object *frame_array_json;
+        json_object_object_get_ex(entity_json, "frames", &frame_array_json);
+        int number_of_frames = json_object_array_length(frame_array_json);
+        quee_sprite_init_frames(sprite, number_of_frames);
+        json_object *frame_info_json;
+        for(size_t i = 0; i < number_of_frames; i++) {
+            frame_info_json = json_object_array_get_idx(frame_array_json, i);
+            int x = json_object_get_int(json_object_array_get_idx(frame_info_json, 0));
+            int y = json_object_get_int(json_object_array_get_idx(frame_info_json, 1));
+            int w = json_object_get_int(json_object_array_get_idx(frame_info_json, 2));
+            int h = json_object_get_int(json_object_array_get_idx(frame_info_json, 3));
+            int ticks = json_object_get_int(json_object_array_get_idx(frame_info_json, 4));
+            quee_frame frame = { .pos = { .x = x, .y = y}, .size = { .x = w, .y =h }, .ticks = ticks };
+            quee_sprite_add_frame(sprite, frame);
+        }
+        check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, sprite));
+    }
+    //Loading script
+    if(expected_type & QUEE_SCRIPT_BIT) {
+        json_object *script_path_json;
+        json_object_object_get_ex(entity_json, "script", &script_path_json);
+        const char *path = json_object_get_string(script_path_json);
+        quee_script *script = 
+            check_quee_ptr(create_quee_script(g_quee_manager->script_manager, path, entity));
+        check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
+    }
+    //Loading box collider
+    if(expected_type & QUEE_BOX_COLLIDER_BIT) {
+        json_object *box_collider_json;
+        json_object_object_get_ex(entity_json, "box collider", &box_collider_json);
+        json_object *size_json;
+        json_object_object_get_ex(box_collider_json, "size", &size_json);
+        json_object *mask_json;
+        json_object_object_get_ex(box_collider_json, "mask", &mask_json);
+        quee_vec2i size;
+        size.x = json_object_get_int(json_object_array_get_idx(size_json, 0));
+        size.y = json_object_get_int(json_object_array_get_idx(size_json, 1));
+        uint8_t mask = json_object_get_int(mask_json);
+        quee_box_collider *collider = check_quee_ptr(create_quee_box_collider(size, mask));
+        check_quee_code(add_to_quee_entity(entity, QUEE_BOX_COLLIDER_BIT, collider));
+    }
+    //If we don't match the expected type by now something is fucked
+    assert(entity->type == expected_type);
+    scene->entities[i] = entity; 
+}
+
+
 //TODO need to make this function more robust so we can gracefully fail on malformed scenes
-quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee_texture_manager *texture_manager, quee_script_manager *script_manager) {
+quee_scene* load_quee_scene(const char *scene_path) {
     FILE *fp;
     //TODO Fix this so we can read larger files and don't have to worry about this anymore
     char buffer[2048];
     json_object *parsed_json;
     json_object *entities_json;
-    json_object *entity_json;
-    json_object *enetity_type_json;
     json_object *scene_name_json;
     json_object *render_json;
     quee_scene* scene = malloc(sizeof(quee_scene));
@@ -135,78 +217,15 @@ quee_scene* load_quee_scene(const char *scene_path, SDL_Renderer* renderer, quee
     scene->max_entities = scene->current_entities;
     scene->entities = malloc(scene->current_entities * sizeof(quee_entity));
     for(size_t i = 0; i < scene->current_entities; i++) {
-        entity_json = json_object_array_get_idx(entities_json, i);
-        json_object_object_get_ex(entity_json, "type", &enetity_type_json);
-        quee_entity *entity = create_quee_entity(scene);
-        //Get the entity's name
-        json_object *name;
-        json_object_object_get_ex(entity_json, "name", &name);
-        entity->name = malloc(sizeof(char) * (strlen(json_object_get_string(name)) + 1));
-        strcpy(entity->name, json_object_get_string(name));
-        json_object *pos_json;
-        json_object_object_get_ex(entity_json, "pos", &pos_json);
-        if(pos_json) {
-            int pos_x = json_object_get_int(json_object_array_get_idx(pos_json, 0));
-            int pos_y = json_object_get_int(json_object_array_get_idx(pos_json, 1));
-            entity->pos.x = pos_x;
-            entity->pos.y = pos_y;
-        }
-        int expected_type = json_object_get_int(enetity_type_json);
-        //Check the type and load each part of the type
-        //Loading sprite
-        if(expected_type & QUEE_SPRITE_BIT) {
-            // Get the path to the texture
-            json_object *sprite_path_json;
-            json_object_object_get_ex(entity_json, "path", &sprite_path_json);
-            quee_texture *texture = 
-                check_quee_ptr(quee_texture_manager_get(texture_manager, json_object_get_string(sprite_path_json)));
-            quee_sprite *sprite = create_quee_sprite(texture);
-            // Load the frame information
-            json_object *frame_array_json;
-            json_object_object_get_ex(entity_json, "frames", &frame_array_json);
-            int number_of_frames = json_object_array_length(frame_array_json);
-            quee_sprite_init_frames(sprite, number_of_frames);
-            json_object *frame_info_json;
-            for(size_t i = 0; i < number_of_frames; i++) {
-                frame_info_json = json_object_array_get_idx(frame_array_json, i);
-                int x = json_object_get_int(json_object_array_get_idx(frame_info_json, 0));
-                int y = json_object_get_int(json_object_array_get_idx(frame_info_json, 1));
-                int w = json_object_get_int(json_object_array_get_idx(frame_info_json, 2));
-                int h = json_object_get_int(json_object_array_get_idx(frame_info_json, 3));
-                int ticks = json_object_get_int(json_object_array_get_idx(frame_info_json, 4));
-                quee_frame frame = { .pos = { .x = x, .y = y}, .size = { .x = w, .y =h }, .ticks = ticks };
-                quee_sprite_add_frame(sprite, frame);
-            }
-            check_quee_code(add_to_quee_entity(entity, QUEE_SPRITE_BIT, sprite));
-        }
-        //Loading script
-        if(expected_type & QUEE_SCRIPT_BIT) {
-            json_object *script_path_json;
-            json_object_object_get_ex(entity_json, "script", &script_path_json);
-            const char *path = json_object_get_string(script_path_json);
-            quee_script *script = 
-                check_quee_ptr(create_quee_script(script_manager, path, entity));
-            check_quee_code(add_to_quee_entity(entity, QUEE_SCRIPT_BIT, script));
-        }
-        //Loading box collider
-        if(expected_type & QUEE_BOX_COLLIDER_BIT) {
-            json_object *box_collider_json;
-            json_object_object_get_ex(entity_json, "box collider", &box_collider_json);
-            json_object *size_json;
-            json_object_object_get_ex(box_collider_json, "size", &size_json);
-            json_object *mask_json;
-            json_object_object_get_ex(box_collider_json, "mask", &mask_json);
-            quee_vec2i size;
-            size.x = json_object_get_int(json_object_array_get_idx(size_json, 0));
-            size.y = json_object_get_int(json_object_array_get_idx(size_json, 1));
-            uint8_t mask = json_object_get_int(mask_json);
-            quee_box_collider *collider = check_quee_ptr(create_quee_box_collider(size, mask));
-            check_quee_code(add_to_quee_entity(entity, QUEE_BOX_COLLIDER_BIT, collider));
-        }
-        //If we don't match the expected type by now something is fucked
-        assert(entity->type == expected_type);
-        scene->entities[i] = entity; 
+        void **args = malloc(sizeof(void *) * 3);
+        args[0] = scene;
+        args[1] = entities_json;
+        args[2] = malloc(sizeof(unsigned int *));
+        (*(unsigned int *) args[2]) =  i;
+        quee_thread_pool_add_work(g_quee_manager->thread_pool, create_quee_entity_thread_work, args);
     }
+
+    quee_thread_pool_wait(g_quee_manager->thread_pool);
 
     //Now that all entities are loaded we will run their onCreate
     //This way if any of their scripts reference another entity

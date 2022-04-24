@@ -48,8 +48,9 @@ int main(void) {
 
     check_quee_code(quee_load_sound(g_quee_manager->sound_manager, "assets/sounds/test.ogg"));
 
+    quee_scene *scene = load_quee_scene("assets/scene.json");
     check_quee_code(quee_scene_manager_insert(
-        g_quee_manager->scene_manager, load_quee_scene("assets/scene.json", g_renderer, g_quee_manager->texture_manager, g_quee_manager->script_manager)));
+        g_quee_manager->scene_manager, scene));
     bool quit = false;
 
     uint32_t frame_start, frame_end, prev_frame_start;
