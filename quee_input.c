@@ -29,7 +29,6 @@ bool quee_input_is_held(quee_input_manager *manager, const char *key) {
     //We couldn't get the code
     if(code == 0) {
         fprintf(stderr, "Something went wrong getting scan code for: %s\nError: %s\nPress enter to quit...\n", key, SDL_GetError());
-        getchar();
         exit(EXIT_FAILURE);
     }
     return manager->current_frame[code];
@@ -40,7 +39,6 @@ bool quee_input_is_pressed(quee_input_manager *manager, const char *key) {
     //We couldn't get the code
     if(code == 0) {
         fprintf(stderr, "Something went wrong getting scan code for: %s\nError: %s\nPress enter to quit...\n", key, SDL_GetError());
-        getchar();
         exit(EXIT_FAILURE);
     }
     return manager->current_frame[code] && !manager->previous_frame[code];
@@ -51,7 +49,6 @@ bool quee_input_was_released(quee_input_manager *manager, const char *key) {
     //We couldn't get the code
     if(code == 0) {
         fprintf(stderr, "Something went wrong getting scan code for: %s\nError: %s\nPress enter to quit...\n", key, SDL_GetError());
-        getchar();
         exit(EXIT_FAILURE);
     }
     //If the key is not pressed this frame and it was last then we had to have released
