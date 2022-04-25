@@ -2,6 +2,7 @@
 #define QUEE_SCRIPT_H_
 
 #include <stdint.h>
+#include <pthread.h>
 
 typedef struct lua_State lua_State;
 typedef struct quee_entity quee_entity;
@@ -11,6 +12,7 @@ typedef struct quee_script quee_script;
 
 struct quee_script_manager {
     lua_State *L;
+    pthread_mutex_t mutex;
 };
 
 #define QUEE_ON_CREATE_BIT 0x01

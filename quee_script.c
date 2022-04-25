@@ -6,6 +6,7 @@
 #include "quee_script_functions.h"
 #include "quee_entity.h"
 
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -14,6 +15,7 @@
 
 quee_script_manager * create_quee_script_manager() {
     quee_script_manager *manager = malloc(sizeof(quee_script_manager));
+    pthread_mutex_init(&(manager->mutex), NULL);
     manager->L = luaL_newstate();
     luaL_openlibs(manager->L);
 
@@ -56,6 +58,7 @@ bool check_script_for_function(const char *path, const char *function) {
 //TODO need to make sure that all entities have a unique name or maybe should use their id instead of their name
 //not entirely sure
 quee_script * create_quee_script(quee_script_manager *manager, const char *path, quee_entity *entity) {
+    pthread_mutex_lock(&(manager->mutex));
     if(path == NULL) {
         quee_set_error("Attempted to load a script with a null path");
         return NULL;
@@ -87,6 +90,7 @@ quee_script * create_quee_script(quee_script_manager *manager, const char *path,
     if(check_script_for_function(path, "onCollision(entity")) {
         script->type |= QUEE_ON_COLLIDE_BIT; 
     }
+    pthread_mutex_unlock(&(manager->mutex));
     return script;
 }
 
@@ -112,6 +116,7 @@ int run_quee_script_function(quee_script *script, const char *function, void *ar
 
 void destroy_quee_script_manager(quee_script_manager **manager) {
     lua_close((*manager)->L);
+    pthread_mutex_destroy(&((*manager)->mutex));
     free(*manager);
     *manager = NULL;
 }
