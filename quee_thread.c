@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 
 
@@ -103,6 +104,8 @@ quee_thread_pool * create_quee_thread_pool(uint32_t size)
     pthread_cond_init(&(pool->working_cond), NULL);
     pool->work_first = NULL;
     pool->work_last = NULL;
+    pool->stop = false;
+    pool->working_count = 0;
 
     for(uint32_t i = 0; i < size; i++) {
         pthread_create(&thread, NULL, quee_thread_worker, pool);
@@ -191,7 +194,7 @@ void quee_thread_pool_wait(quee_thread_pool *pool) {
 
     //Wait for stuff to finish up
     while(1) {
-        if((!pool->stop && pool->working_count != 0) || (pool->stop && pool->thread_count != 0)) {
+        if((!pool->stop && (pool->working_count != 0 || pool->work_first != NULL)) || (pool->stop && pool->thread_count != 0)) {
             pthread_cond_wait(&(pool->working_cond), &(pool->work_mutex));
         } else {
             break;

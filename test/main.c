@@ -12,6 +12,7 @@
 #include "quee_script_test.h"
 
 #include "../quee_helpers.h"
+#include "../quee_global_manager.h"
 
 typedef struct quee_test quee_test;
 
@@ -54,6 +55,7 @@ int main(int argc, char** argv) {
 
     g_renderer =
         check_sdl_ptr(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED));
+    g_quee_manager = check_quee_ptr(create_quee_global_manager());
     // Figure out how many tests are in the array of tests
     int num_tests = sizeof(tests) / sizeof(quee_test);
 
